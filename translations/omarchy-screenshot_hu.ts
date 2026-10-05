@@ -208,6 +208,37 @@
         </message>
     </context>
     <context>
+        <name>CursorCaptureGuard</name>
+        <message>
+            <source>Cannot exclude the cursor: %1</source>
+            <translation>Az egérmutató nem rejthető el: %1</translation>
+        </message>
+        <message>
+            <source>XDG_RUNTIME_DIR is not set</source>
+            <translation>az XDG_RUNTIME_DIR nincs beállítva</translation>
+        </message>
+        <message>
+            <source>cannot open the capture lock</source>
+            <translation>a rögzítési zárolás nem nyitható meg</translation>
+        </message>
+        <message>
+            <source>cannot lock the cursor state</source>
+            <translation>a mutató állapota nem zárolható</translation>
+        </message>
+        <message>
+            <source>cannot read cursor:invisible</source>
+            <translation>a cursor:invisible nem olvasható</translation>
+        </message>
+        <message>
+            <source>cannot start cursor restoration</source>
+            <translation>a mutató visszaállítása nem indítható el</translation>
+        </message>
+        <message>
+            <source>cannot suppress compositor cursor rendering</source>
+            <translation>a kompozitor mutatórajzolása nem tiltható le</translation>
+        </message>
+    </context>
+    <context>
         <name>LongOverlay</name>
         <message>
             <source>%1% · Drag to view · Double-click to copy · Scroll to pan · Ctrl+scroll to zoom</source>

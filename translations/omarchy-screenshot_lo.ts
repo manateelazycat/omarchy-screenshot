@@ -208,6 +208,37 @@
         </message>
     </context>
     <context>
+        <name>CursorCaptureGuard</name>
+        <message>
+            <source>Cannot exclude the cursor: %1</source>
+            <translation>ບໍ່ສາມາດເຊື່ອງຕົວຊີ້ເມົາ: %1</translation>
+        </message>
+        <message>
+            <source>XDG_RUNTIME_DIR is not set</source>
+            <translation>ບໍ່ໄດ້ຕັ້ງຄ່າ XDG_RUNTIME_DIR</translation>
+        </message>
+        <message>
+            <source>cannot open the capture lock</source>
+            <translation>ບໍ່ສາມາດເປີດລັອກການຈັບພາບ</translation>
+        </message>
+        <message>
+            <source>cannot lock the cursor state</source>
+            <translation>ບໍ່ສາມາດລັອກສະຖານະຕົວຊີ້</translation>
+        </message>
+        <message>
+            <source>cannot read cursor:invisible</source>
+            <translation>ບໍ່ສາມາດອ່ານ cursor:invisible</translation>
+        </message>
+        <message>
+            <source>cannot start cursor restoration</source>
+            <translation>ບໍ່ສາມາດເລີ່ມການກູ້ຄືນຕົວຊີ້</translation>
+        </message>
+        <message>
+            <source>cannot suppress compositor cursor rendering</source>
+            <translation>ບໍ່ສາມາດປິດການແຕ້ມຕົວຊີ້ຂອງຄອມໂພສິດເຕີ</translation>
+        </message>
+    </context>
+    <context>
         <name>LongOverlay</name>
         <message>
             <source>%1% · Drag to view · Double-click to copy · Scroll to pan · Ctrl+scroll to zoom</source>

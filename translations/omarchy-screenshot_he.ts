@@ -208,6 +208,37 @@
         </message>
     </context>
     <context>
+        <name>CursorCaptureGuard</name>
+        <message>
+            <source>Cannot exclude the cursor: %1</source>
+            <translation>לא ניתן להסתיר את הסמן: ⁨%1⁩</translation>
+        </message>
+        <message>
+            <source>XDG_RUNTIME_DIR is not set</source>
+            <translation>משתנה הסביבה ⁦XDG_RUNTIME_DIR⁩ אינו מוגדר</translation>
+        </message>
+        <message>
+            <source>cannot open the capture lock</source>
+            <translation>לא ניתן לפתוח את נעילת הצילום</translation>
+        </message>
+        <message>
+            <source>cannot lock the cursor state</source>
+            <translation>לא ניתן לנעול את מצב הסמן</translation>
+        </message>
+        <message>
+            <source>cannot read cursor:invisible</source>
+            <translation>לא ניתן לקרוא את ⁦cursor:invisible⁩</translation>
+        </message>
+        <message>
+            <source>cannot start cursor restoration</source>
+            <translation>לא ניתן להפעיל את שחזור הסמן</translation>
+        </message>
+        <message>
+            <source>cannot suppress compositor cursor rendering</source>
+            <translation>לא ניתן לבטל את ציור הסמן על ידי מרכיב התצוגה</translation>
+        </message>
+    </context>
+    <context>
         <name>LongOverlay</name>
         <message>
             <source>%1% · Drag to view · Double-click to copy · Scroll to pan · Ctrl+scroll to zoom</source>

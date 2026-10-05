@@ -8,6 +8,7 @@
 
 #include <QObject>
 #include <QQuickView>
+#include <QTimer>
 #include <memory>
 #include <vector>
 
@@ -26,8 +27,10 @@ public:
 
 private:
   void update();
+  void followScreens();
   QQmlEngine *m_engine;
   PinnedImages *m_images;
   bool m_suspended = true;
+  QTimer m_screenRefresh;
   std::vector<std::unique_ptr<QQuickView>> m_views;
 };

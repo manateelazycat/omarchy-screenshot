@@ -208,6 +208,37 @@
         </message>
     </context>
     <context>
+        <name>CursorCaptureGuard</name>
+        <message>
+            <source>Cannot exclude the cursor: %1</source>
+            <translation>Αδυναμία απόκρυψης του δρομέα: %1</translation>
+        </message>
+        <message>
+            <source>XDG_RUNTIME_DIR is not set</source>
+            <translation>η μεταβλητή XDG_RUNTIME_DIR δεν έχει οριστεί</translation>
+        </message>
+        <message>
+            <source>cannot open the capture lock</source>
+            <translation>αδυναμία ανοίγματος του κλειδώματος λήψης</translation>
+        </message>
+        <message>
+            <source>cannot lock the cursor state</source>
+            <translation>αδυναμία κλειδώματος της κατάστασης του δρομέα</translation>
+        </message>
+        <message>
+            <source>cannot read cursor:invisible</source>
+            <translation>αδυναμία ανάγνωσης του cursor:invisible</translation>
+        </message>
+        <message>
+            <source>cannot start cursor restoration</source>
+            <translation>αδυναμία εκκίνησης της επαναφοράς του δρομέα</translation>
+        </message>
+        <message>
+            <source>cannot suppress compositor cursor rendering</source>
+            <translation>αδυναμία απενεργοποίησης της απόδοσης του δρομέα από τον συνθέτη</translation>
+        </message>
+    </context>
+    <context>
         <name>LongOverlay</name>
         <message>
             <source>%1% · Drag to view · Double-click to copy · Scroll to pan · Ctrl+scroll to zoom</source>

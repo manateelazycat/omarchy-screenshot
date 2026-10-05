@@ -208,6 +208,37 @@
         </message>
     </context>
     <context>
+        <name>CursorCaptureGuard</name>
+        <message>
+            <source>Cannot exclude the cursor: %1</source>
+            <translation>Тінтуір меңзерін жасыру мүмкін емес: %1</translation>
+        </message>
+        <message>
+            <source>XDG_RUNTIME_DIR is not set</source>
+            <translation>XDG_RUNTIME_DIR орнатылмаған</translation>
+        </message>
+        <message>
+            <source>cannot open the capture lock</source>
+            <translation>түсіру құлпын ашу мүмкін емес</translation>
+        </message>
+        <message>
+            <source>cannot lock the cursor state</source>
+            <translation>меңзер күйін құлыптау мүмкін емес</translation>
+        </message>
+        <message>
+            <source>cannot read cursor:invisible</source>
+            <translation>cursor:invisible мәнін оқу мүмкін емес</translation>
+        </message>
+        <message>
+            <source>cannot start cursor restoration</source>
+            <translation>меңзерді қалпына келтіруді бастау мүмкін емес</translation>
+        </message>
+        <message>
+            <source>cannot suppress compositor cursor rendering</source>
+            <translation>композитордың меңзерді салуын өшіру мүмкін емес</translation>
+        </message>
+    </context>
+    <context>
         <name>LongOverlay</name>
         <message>
             <source>%1% · Drag to view · Double-click to copy · Scroll to pan · Ctrl+scroll to zoom</source>

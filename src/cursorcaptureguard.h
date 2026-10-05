@@ -3,12 +3,15 @@
 
 #pragma once
 
+#include <QCoreApplication>
 #include <QProcess>
 #include <QString>
 
 // Keep compositor-rendered cursors out of the source framebuffer as well as
 // requesting a cursor-free capture. Owns the temporary setting for all outputs.
 class CursorCaptureGuard {
+  Q_DECLARE_TR_FUNCTIONS(CursorCaptureGuard)
+
 public:
   explicit CursorCaptureGuard(QString *error);
   ~CursorCaptureGuard();

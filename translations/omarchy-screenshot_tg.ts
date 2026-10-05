@@ -208,6 +208,37 @@
         </message>
     </context>
     <context>
+        <name>CursorCaptureGuard</name>
+        <message>
+            <source>Cannot exclude the cursor: %1</source>
+            <translation>Пинҳон кардани курсор ғайриимкон аст: %1</translation>
+        </message>
+        <message>
+            <source>XDG_RUNTIME_DIR is not set</source>
+            <translation>XDG_RUNTIME_DIR муқаррар нашудааст</translation>
+        </message>
+        <message>
+            <source>cannot open the capture lock</source>
+            <translation>кушодани қулфи акскашӣ ғайриимкон аст</translation>
+        </message>
+        <message>
+            <source>cannot lock the cursor state</source>
+            <translation>қулф кардани ҳолати курсор ғайриимкон аст</translation>
+        </message>
+        <message>
+            <source>cannot read cursor:invisible</source>
+            <translation>хондани cursor:invisible ғайриимкон аст</translation>
+        </message>
+        <message>
+            <source>cannot start cursor restoration</source>
+            <translation>оғози барқарорсозии курсор ғайриимкон аст</translation>
+        </message>
+        <message>
+            <source>cannot suppress compositor cursor rendering</source>
+            <translation>хомӯш кардани кашидани курсор аз ҷониби композитор ғайриимкон аст</translation>
+        </message>
+    </context>
+    <context>
         <name>LongOverlay</name>
         <message>
             <source>%1% · Drag to view · Double-click to copy · Scroll to pan · Ctrl+scroll to zoom</source>

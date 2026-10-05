@@ -208,6 +208,37 @@
         </message>
     </context>
     <context>
+        <name>CursorCaptureGuard</name>
+        <message>
+            <source>Cannot exclude the cursor: %1</source>
+            <translation>Impossibile nascondere il cursore: %1</translation>
+        </message>
+        <message>
+            <source>XDG_RUNTIME_DIR is not set</source>
+            <translation>la variabile XDG_RUNTIME_DIR non è impostata</translation>
+        </message>
+        <message>
+            <source>cannot open the capture lock</source>
+            <translation>impossibile aprire il blocco di acquisizione</translation>
+        </message>
+        <message>
+            <source>cannot lock the cursor state</source>
+            <translation>impossibile bloccare lo stato del cursore</translation>
+        </message>
+        <message>
+            <source>cannot read cursor:invisible</source>
+            <translation>impossibile leggere cursor:invisible</translation>
+        </message>
+        <message>
+            <source>cannot start cursor restoration</source>
+            <translation>impossibile avviare il ripristino del cursore</translation>
+        </message>
+        <message>
+            <source>cannot suppress compositor cursor rendering</source>
+            <translation>impossibile disattivare il disegno del cursore da parte del compositor</translation>
+        </message>
+    </context>
+    <context>
         <name>LongOverlay</name>
         <message>
             <source>%1% · Drag to view · Double-click to copy · Scroll to pan · Ctrl+scroll to zoom</source>

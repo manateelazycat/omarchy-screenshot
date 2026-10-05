@@ -34,6 +34,7 @@
 #include <QScopeGuard>
 #include <QSocketNotifier>
 #include <QSignalSpy>
+#include <QStandardPaths>
 #include <QTemporaryDir>
 #include <QTest>
 #include <QTextStream>
@@ -1003,23 +1004,26 @@ int main(int argc, char **argv) {
                                     (screen.height() * .8) / image.height()});
       rect = QRectF(screen.topLeft() + QPointF(30, 30), QSizeF(image.size()) * scale);
     }
-    const bool added = pins.add(image, rect) >= 0;
     // Without resident mode a pin keeps this process alive. Let subsequent
     // plain launches reuse it, so older pins can be excluded from captures.
-    if (added && !uiTest && !daemon && !requests) {
+    // If another process owns the socket, it serves those launches and cannot
+    // hide this process's pins, so refuse the pin instead of leaking it.
+    if (!uiTest && !daemon && !requests) {
       const std::string path = pinUiTest
           ? testSettings->filePath(QStringLiteral("omarchy-screenshot.sock")).toStdString()
           : daemonSocketPath();
       std::string listenError;
-      if (listenForCaptureRequests(path, &listener, &socketLock, &listenError) ==
+      if (listenForCaptureRequests(path, &listener, &socketLock, &listenError) !=
           ListenResult::Listening) {
-        ownedSocket = path;
-        listenForRequests();
-      } else if (!listenError.empty()) {
-        qWarning().noquote() << QString::fromStdString(listenError);
+        if (!listenError.empty())
+          qWarning().noquote() << QString::fromStdString(listenError);
+        controller.finishPin(false);
+        return;
       }
+      ownedSocket = path;
+      listenForRequests();
     }
-    controller.finishPin(added);
+    controller.finishPin(pins.add(image, rect) >= 0);
   });
   QObject::connect(&pins, &PinnedImages::countChanged, &app, [&] {
     if (pins.count() > 0)
@@ -1126,9 +1130,11 @@ int main(int argc, char **argv) {
       return fail(QStringLiteral("Multiple pins failed"));
     const auto &pinViews = pinWindows.views();
     const QImage preview = selfTestLogicalImage(pinViews[1]->grabWindow(), secondScreen.size());
-    if (!preview.isNull())
+    // The preview holds captured screen pixels, so keep it out of shared /tmp.
+    const QString runtime = QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation);
+    if (!preview.isNull() && !runtime.isEmpty())
       preview.copy(QRect(QPoint(150, 150), QSize(280, 180))).save(
-          QStringLiteral("/tmp/omarchy-pin-preview.png"));
+          runtime + QStringLiteral("/omarchy-pin-preview.png"));
     auto request = std::async(std::launch::async, [&] {
       return forwardCaptureRequest(ownedSocket);
     });
