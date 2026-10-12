@@ -208,6 +208,37 @@
         </message>
     </context>
     <context>
+        <name>CursorCaptureGuard</name>
+        <message>
+            <source>Cannot exclude the cursor: %1</source>
+            <translation>Nije moguće sakriti kursor: %1</translation>
+        </message>
+        <message>
+            <source>XDG_RUNTIME_DIR is not set</source>
+            <translation>varijabla XDG_RUNTIME_DIR nije postavljena</translation>
+        </message>
+        <message>
+            <source>cannot open the capture lock</source>
+            <translation>nije moguće otvoriti zaključavanje snimanja</translation>
+        </message>
+        <message>
+            <source>cannot lock the cursor state</source>
+            <translation>nije moguće zaključati stanje kursora</translation>
+        </message>
+        <message>
+            <source>cannot read cursor:invisible</source>
+            <translation>nije moguće pročitati cursor:invisible</translation>
+        </message>
+        <message>
+            <source>cannot start cursor restoration</source>
+            <translation>nije moguće pokrenuti vraćanje kursora</translation>
+        </message>
+        <message>
+            <source>cannot suppress compositor cursor rendering</source>
+            <translation>nije moguće isključiti iscrtavanje kursora u kompozitoru</translation>
+        </message>
+    </context>
+    <context>
         <name>LongOverlay</name>
         <message>
             <source>%1% · Drag to view · Double-click to copy · Scroll to pan · Ctrl+scroll to zoom</source>

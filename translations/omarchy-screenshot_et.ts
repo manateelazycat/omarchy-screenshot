@@ -208,6 +208,37 @@
         </message>
     </context>
     <context>
+        <name>CursorCaptureGuard</name>
+        <message>
+            <source>Cannot exclude the cursor: %1</source>
+            <translation>Hiirekursorit ei saa peita: %1</translation>
+        </message>
+        <message>
+            <source>XDG_RUNTIME_DIR is not set</source>
+            <translation>XDG_RUNTIME_DIR pole määratud</translation>
+        </message>
+        <message>
+            <source>cannot open the capture lock</source>
+            <translation>jäädvustuslukku ei saa avada</translation>
+        </message>
+        <message>
+            <source>cannot lock the cursor state</source>
+            <translation>kursori olekut ei saa lukustada</translation>
+        </message>
+        <message>
+            <source>cannot read cursor:invisible</source>
+            <translation>cursor:invisible väärtust ei saa lugeda</translation>
+        </message>
+        <message>
+            <source>cannot start cursor restoration</source>
+            <translation>kursori taastamist ei saa käivitada</translation>
+        </message>
+        <message>
+            <source>cannot suppress compositor cursor rendering</source>
+            <translation>komposiitori kursorijoonistust ei saa välja lülitada</translation>
+        </message>
+    </context>
+    <context>
         <name>LongOverlay</name>
         <message>
             <source>%1% · Drag to view · Double-click to copy · Scroll to pan · Ctrl+scroll to zoom</source>

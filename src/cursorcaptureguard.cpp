@@ -30,11 +30,11 @@ QByteArray hyprctl(const QStringList &arguments) {
 CursorCaptureGuard::CursorCaptureGuard(QString *error) {
   const auto fail = [error](const QString &detail) {
     if (error)
-      *error = QStringLiteral("Cannot exclude the cursor: %1").arg(detail);
+      *error = tr("Cannot exclude the cursor: %1").arg(detail);
   };
   const QString runtime = qEnvironmentVariable("XDG_RUNTIME_DIR");
   if (runtime.isEmpty()) {
-    fail(QStringLiteral("XDG_RUNTIME_DIR is not set"));
+    fail(tr("XDG_RUNTIME_DIR is not set"));
     return;
   }
   // A daemon and a standalone invocation must not restore the cursor while
@@ -49,7 +49,7 @@ CursorCaptureGuard::CursorCaptureGuard(QString *error) {
   m_lock =
       open(path.constData(), O_CREAT | O_RDWR | O_CLOEXEC | O_NOFOLLOW, 0600);
   if (m_lock < 0) {
-    fail(QStringLiteral("cannot open the capture lock"));
+    fail(tr("cannot open the capture lock"));
     return;
   }
   int locked;
@@ -57,7 +57,7 @@ CursorCaptureGuard::CursorCaptureGuard(QString *error) {
     locked = flock(m_lock, LOCK_EX);
   } while (locked < 0 && errno == EINTR);
   if (locked < 0) {
-    fail(QStringLiteral("cannot lock the cursor state"));
+    fail(tr("cannot lock the cursor state"));
     return;
   }
 
@@ -69,7 +69,7 @@ CursorCaptureGuard::CursorCaptureGuard(QString *error) {
   const auto boolean = option.value(QStringLiteral("bool"));
   const auto integer = option.value(QStringLiteral("int"));
   if (!boolean.isBool() && !integer.isDouble()) {
-    fail(QStringLiteral("cannot read cursor:invisible"));
+    fail(tr("cannot read cursor:invisible"));
     return;
   }
   const bool invisible =
@@ -98,14 +98,14 @@ CursorCaptureGuard::CursorCaptureGuard(QString *error) {
                         "[ \"$result\" = ok ]"),
          QStringLiteral("cursor-restore")});
     if (!m_restore.waitForStarted(1000)) {
-      fail(QStringLiteral("cannot start cursor restoration"));
+      fail(tr("cannot start cursor restoration"));
       return;
     }
     m_restoreArmed = true;
     if (hyprctl(enableLua) != "ok" &&
         hyprctl({QStringLiteral("keyword"), QStringLiteral("cursor:invisible"),
                  QStringLiteral("1")}) != "ok") {
-      fail(QStringLiteral("cannot suppress compositor cursor rendering"));
+      fail(tr("cannot suppress compositor cursor rendering"));
       return;
     }
   }

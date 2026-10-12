@@ -208,6 +208,37 @@
         </message>
     </context>
     <context>
+        <name>CursorCaptureGuard</name>
+        <message>
+            <source>Cannot exclude the cursor: %1</source>
+            <translation>Ekki er hægt að fela músarbendilinn: %1</translation>
+        </message>
+        <message>
+            <source>XDG_RUNTIME_DIR is not set</source>
+            <translation>XDG_RUNTIME_DIR er ekki skilgreint</translation>
+        </message>
+        <message>
+            <source>cannot open the capture lock</source>
+            <translation>ekki er hægt að opna myndatökulásinn</translation>
+        </message>
+        <message>
+            <source>cannot lock the cursor state</source>
+            <translation>ekki er hægt að læsa stöðu bendilsins</translation>
+        </message>
+        <message>
+            <source>cannot read cursor:invisible</source>
+            <translation>ekki er hægt að lesa cursor:invisible</translation>
+        </message>
+        <message>
+            <source>cannot start cursor restoration</source>
+            <translation>ekki er hægt að ræsa endurheimt bendilsins</translation>
+        </message>
+        <message>
+            <source>cannot suppress compositor cursor rendering</source>
+            <translation>ekki er hægt að slökkva á teiknun gluggastjórans á bendlinum</translation>
+        </message>
+    </context>
+    <context>
         <name>LongOverlay</name>
         <message>
             <source>%1% · Drag to view · Double-click to copy · Scroll to pan · Ctrl+scroll to zoom</source>

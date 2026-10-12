@@ -208,6 +208,37 @@
         </message>
     </context>
     <context>
+        <name>CursorCaptureGuard</name>
+        <message>
+            <source>Cannot exclude the cursor: %1</source>
+            <translation>Nu se poate ascunde cursorul: %1</translation>
+        </message>
+        <message>
+            <source>XDG_RUNTIME_DIR is not set</source>
+            <translation>variabila XDG_RUNTIME_DIR nu este setată</translation>
+        </message>
+        <message>
+            <source>cannot open the capture lock</source>
+            <translation>nu se poate deschide blocarea capturii</translation>
+        </message>
+        <message>
+            <source>cannot lock the cursor state</source>
+            <translation>nu se poate bloca starea cursorului</translation>
+        </message>
+        <message>
+            <source>cannot read cursor:invisible</source>
+            <translation>nu se poate citi cursor:invisible</translation>
+        </message>
+        <message>
+            <source>cannot start cursor restoration</source>
+            <translation>nu se poate porni restaurarea cursorului</translation>
+        </message>
+        <message>
+            <source>cannot suppress compositor cursor rendering</source>
+            <translation>nu se poate dezactiva desenarea cursorului de către compozitor</translation>
+        </message>
+    </context>
+    <context>
         <name>LongOverlay</name>
         <message>
             <source>%1% · Drag to view · Double-click to copy · Scroll to pan · Ctrl+scroll to zoom</source>

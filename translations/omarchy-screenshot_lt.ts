@@ -208,6 +208,37 @@
         </message>
     </context>
     <context>
+        <name>CursorCaptureGuard</name>
+        <message>
+            <source>Cannot exclude the cursor: %1</source>
+            <translation>Nepavyksta paslėpti pelės žymeklio: %1</translation>
+        </message>
+        <message>
+            <source>XDG_RUNTIME_DIR is not set</source>
+            <translation>XDG_RUNTIME_DIR nenustatytas</translation>
+        </message>
+        <message>
+            <source>cannot open the capture lock</source>
+            <translation>nepavyksta atverti fiksavimo užrakto</translation>
+        </message>
+        <message>
+            <source>cannot lock the cursor state</source>
+            <translation>nepavyksta užrakinti žymeklio būsenos</translation>
+        </message>
+        <message>
+            <source>cannot read cursor:invisible</source>
+            <translation>nepavyksta perskaityti cursor:invisible</translation>
+        </message>
+        <message>
+            <source>cannot start cursor restoration</source>
+            <translation>nepavyksta paleisti žymeklio atkūrimo</translation>
+        </message>
+        <message>
+            <source>cannot suppress compositor cursor rendering</source>
+            <translation>nepavyksta išjungti kompozitoriaus žymeklio piešimo</translation>
+        </message>
+    </context>
+    <context>
         <name>LongOverlay</name>
         <message>
             <source>%1% · Drag to view · Double-click to copy · Scroll to pan · Ctrl+scroll to zoom</source>

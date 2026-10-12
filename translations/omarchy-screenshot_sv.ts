@@ -208,6 +208,37 @@
         </message>
     </context>
     <context>
+        <name>CursorCaptureGuard</name>
+        <message>
+            <source>Cannot exclude the cursor: %1</source>
+            <translation>Kan inte dölja muspekaren: %1</translation>
+        </message>
+        <message>
+            <source>XDG_RUNTIME_DIR is not set</source>
+            <translation>XDG_RUNTIME_DIR är inte angiven</translation>
+        </message>
+        <message>
+            <source>cannot open the capture lock</source>
+            <translation>kan inte öppna skärmbildslåset</translation>
+        </message>
+        <message>
+            <source>cannot lock the cursor state</source>
+            <translation>kan inte låsa pekarens tillstånd</translation>
+        </message>
+        <message>
+            <source>cannot read cursor:invisible</source>
+            <translation>kan inte läsa cursor:invisible</translation>
+        </message>
+        <message>
+            <source>cannot start cursor restoration</source>
+            <translation>kan inte starta återställningen av pekaren</translation>
+        </message>
+        <message>
+            <source>cannot suppress compositor cursor rendering</source>
+            <translation>kan inte stänga av kompositorns ritning av pekaren</translation>
+        </message>
+    </context>
+    <context>
         <name>LongOverlay</name>
         <message>
             <source>%1% · Drag to view · Double-click to copy · Scroll to pan · Ctrl+scroll to zoom</source>

@@ -52,6 +52,22 @@ PinnedWindows::PinnedWindows(QQmlEngine *engine, PinnedImages *images,
         m_images->setScreens(screens);
         update();
       });
+  // Pins outlive the capture that created them, so follow outputs connected
+  // or rearranged meanwhile instead of waiting for the next capture.
+  m_screenRefresh.setSingleShot(true);
+  connect(&m_screenRefresh, &QTimer::timeout, this,
+          &PinnedWindows::followScreens);
+  const auto watch = [this](QScreen *screen) {
+    connect(screen, &QScreen::geometryChanged, &m_screenRefresh,
+            qOverload<>(&QTimer::start));
+  };
+  for (QScreen *screen : QGuiApplication::screens())
+    watch(screen);
+  connect(qGuiApp, &QGuiApplication::screenAdded, this,
+          [this, watch](QScreen *screen) {
+            watch(screen);
+            m_screenRefresh.start();
+          });
 }
 
 bool PinnedWindows::setMonitors(const QVector<CaptureMonitor> &monitors) {
@@ -97,6 +113,22 @@ bool PinnedWindows::setMonitors(const QVector<CaptureMonitor> &monitors) {
   m_images->setScreens(screens);
   update();
   return !m_views.empty();
+}
+
+void PinnedWindows::followScreens() {
+  if (m_images->count() == 0)
+    return;
+  QVector<CaptureMonitor> monitors;
+  for (QScreen *screen : QGuiApplication::screens()) {
+    CaptureMonitor monitor;
+    monitor.name = screen->name();
+    monitor.geometry = screen->geometry();
+    monitor.screen = screen;
+    monitors.append(monitor);
+  }
+  // A rebuilt view would drop the surface that holds the pointer grab.
+  m_images->endDrag();
+  setMonitors(monitors);
 }
 
 void PinnedWindows::setSuspended(bool suspended) {

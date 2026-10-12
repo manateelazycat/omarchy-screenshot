@@ -208,6 +208,37 @@
         </message>
     </context>
     <context>
+        <name>CursorCaptureGuard</name>
+        <message>
+            <source>Cannot exclude the cursor: %1</source>
+            <translation>無法隱藏游標：%1</translation>
+        </message>
+        <message>
+            <source>XDG_RUNTIME_DIR is not set</source>
+            <translation>未設定 XDG_RUNTIME_DIR</translation>
+        </message>
+        <message>
+            <source>cannot open the capture lock</source>
+            <translation>無法開啟擷取鎖</translation>
+        </message>
+        <message>
+            <source>cannot lock the cursor state</source>
+            <translation>無法鎖定游標狀態</translation>
+        </message>
+        <message>
+            <source>cannot read cursor:invisible</source>
+            <translation>無法讀取 cursor:invisible</translation>
+        </message>
+        <message>
+            <source>cannot start cursor restoration</source>
+            <translation>無法啟動游標還原</translation>
+        </message>
+        <message>
+            <source>cannot suppress compositor cursor rendering</source>
+            <translation>無法停用合成器的游標繪製</translation>
+        </message>
+    </context>
+    <context>
         <name>LongOverlay</name>
         <message>
             <source>%1% · Drag to view · Double-click to copy · Scroll to pan · Ctrl+scroll to zoom</source>

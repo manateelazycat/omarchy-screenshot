@@ -208,6 +208,37 @@
         </message>
     </context>
     <context>
+        <name>CursorCaptureGuard</name>
+        <message>
+            <source>Cannot exclude the cursor: %1</source>
+            <translation>Ní féidir an cúrsóir a cheilt: %1</translation>
+        </message>
+        <message>
+            <source>XDG_RUNTIME_DIR is not set</source>
+            <translation>níl XDG_RUNTIME_DIR socraithe</translation>
+        </message>
+        <message>
+            <source>cannot open the capture lock</source>
+            <translation>ní féidir an glas gabhála a oscailt</translation>
+        </message>
+        <message>
+            <source>cannot lock the cursor state</source>
+            <translation>ní féidir staid an chúrsóra a ghlasáil</translation>
+        </message>
+        <message>
+            <source>cannot read cursor:invisible</source>
+            <translation>ní féidir cursor:invisible a léamh</translation>
+        </message>
+        <message>
+            <source>cannot start cursor restoration</source>
+            <translation>ní féidir athchóiriú an chúrsóra a thosú</translation>
+        </message>
+        <message>
+            <source>cannot suppress compositor cursor rendering</source>
+            <translation>ní féidir rindreáil an chúrsóra ag an gcomhdhéantóir a chosc</translation>
+        </message>
+    </context>
+    <context>
         <name>LongOverlay</name>
         <message>
             <source>%1% · Drag to view · Double-click to copy · Scroll to pan · Ctrl+scroll to zoom</source>

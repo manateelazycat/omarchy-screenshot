@@ -208,6 +208,37 @@
         </message>
     </context>
     <context>
+        <name>CursorCaptureGuard</name>
+        <message>
+            <source>Cannot exclude the cursor: %1</source>
+            <translation>カーソルを非表示にできません：%1</translation>
+        </message>
+        <message>
+            <source>XDG_RUNTIME_DIR is not set</source>
+            <translation>XDG_RUNTIME_DIR が設定されていません</translation>
+        </message>
+        <message>
+            <source>cannot open the capture lock</source>
+            <translation>キャプチャ用のロックを開けません</translation>
+        </message>
+        <message>
+            <source>cannot lock the cursor state</source>
+            <translation>カーソル状態をロックできません</translation>
+        </message>
+        <message>
+            <source>cannot read cursor:invisible</source>
+            <translation>cursor:invisible を読み取れません</translation>
+        </message>
+        <message>
+            <source>cannot start cursor restoration</source>
+            <translation>カーソルの復元を開始できません</translation>
+        </message>
+        <message>
+            <source>cannot suppress compositor cursor rendering</source>
+            <translation>コンポジターによるカーソル描画を無効にできません</translation>
+        </message>
+    </context>
+    <context>
         <name>LongOverlay</name>
         <message>
             <source>%1% · Drag to view · Double-click to copy · Scroll to pan · Ctrl+scroll to zoom</source>
