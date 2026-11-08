@@ -119,6 +119,10 @@
             <source>Pin screenshot</source>
             <translation>贴图置顶</translation>
         </message>
+        <message>
+            <source>OCR · Recognize text</source>
+            <translation>OCR · 识别文字</translation>
+        </message>
     </context>
     <context>
         <name>CaptureController</name>
@@ -206,6 +210,14 @@
             <source>Cannot pin screenshot.</source>
             <translation>无法将截图置顶。</translation>
         </message>
+        <message>
+            <source>OCR is not available.</source>
+            <translation>OCR 不可用。</translation>
+        </message>
+        <message>
+            <source>No text found.</source>
+            <translation>未找到文字。</translation>
+        </message>
     </context>
     <context>
         <name>LongOverlay</name>
@@ -235,6 +247,22 @@
         <message>
             <source>The selection contains several windows · Esc to cancel</source>
             <translation>选区内有多个窗口 · Esc 取消</translation>
+        </message>
+        <message>
+            <source>Copy</source>
+            <translation>复制</translation>
+        </message>
+        <message>
+            <source>Copied</source>
+            <translation>已复制</translation>
+        </message>
+        <message>
+            <source>Close OCR result</source>
+            <translation>关闭 OCR 结果</translation>
+        </message>
+        <message>
+            <source>Recognizing text…</source>
+            <translation>正在识别文字…</translation>
         </message>
     </context>
     <context>

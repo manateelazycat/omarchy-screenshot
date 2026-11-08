@@ -13,6 +13,7 @@
 #include <LayerShellQt/window.h>
 #include <QCommandLineParser>
 #include <QDir>
+#include <QEventLoop>
 #include <QFile>
 #include <QGuiApplication>
 #include <QElapsedTimer>
@@ -61,10 +62,20 @@ public:
 
   QImage requestImage(const QString &id, QSize *size,
                       const QSize &requestedSize) override {
-    // "<kind>/<screen>/<generation>"; the generation only defeats caching.
+    // Screen URLs are "<kind>/<screen>/<generation>"; selection uses the
+    // OCR snapshot and only needs the capture generation to defeat caching.
     const QStringList parts = id.split(QLatin1Char('/'));
     if (parts.size() < 2)
       return {};
+    if (parts[0] == QStringLiteral("selection")) {
+      const QImage image = m_controller->ocrPreview();
+      if (size)
+        *size = image.size();
+      if (requestedSize.isValid() && !image.isNull())
+        return image.scaled(requestedSize, Qt::KeepAspectRatio,
+                            Qt::SmoothTransformation);
+      return image;
+    }
     bool valid = false;
     const int index = parts[1].toInt(&valid);
     if (!valid || index < 0)
@@ -1472,8 +1483,9 @@ int main(int argc, char **argv) {
       toolbarOrderWorked =
           displayedAction(7) == QStringLiteral("marker") &&
           displayedAction(8) == QStringLiteral("scroll") &&
-          displayedAction(9) == QStringLiteral("undo") &&
-          displayedAction(10) == QStringLiteral("redo") &&
+          displayedAction(9) == QStringLiteral("ocr") &&
+          displayedAction(10) == QStringLiteral("undo") &&
+          displayedAction(11) == QStringLiteral("redo") &&
           !closeButton.toBool();
       handlesInitiallyVisible = visibleHandleCount() == 8;
       std::function<QQuickItem *(QQuickItem *, const QString &)>
@@ -2412,6 +2424,94 @@ int main(int argc, char **argv) {
               controller.tool() == QStringLiteral("pen");
         }
       }
+      controller.startOcr();
+      QEventLoop ocrLoop;
+      QTimer ocrPoll;
+      QObject::connect(&ocrPoll, &QTimer::timeout, &app, [&] {
+        if (!controller.ocrRunning())
+          ocrLoop.quit();
+      });
+      QTimer::singleShot(30000, &ocrLoop, &QEventLoop::quit);
+      ocrPoll.start(20);
+      ocrLoop.exec();
+      ocrPoll.stop();
+      auto *ocrPanel = views[0]->rootObject()->findChild<QQuickItem *>(
+          QStringLiteral("ocrPanel"));
+      auto *ocrPreview = views[0]->rootObject()->findChild<QQuickItem *>(
+          QStringLiteral("ocrPreviewImage"));
+      auto *ocrTextItem = views[0]->rootObject()->findChild<QQuickItem *>(
+          QStringLiteral("ocrText"));
+      auto *ocrCopy = views[0]->rootObject()->findChild<QQuickItem *>(
+          QStringLiteral("ocrCopy"));
+      if (ocrPanel) {
+        views[0]->rootObject()->setWidth(1200);
+        views[0]->rootObject()->setHeight(800);
+      }
+      for (int i = 0; ocrPreview && i < 50 &&
+           ocrPreview->property("status").toInt() != 1; ++i)
+        QTest::qWait(20);
+      bool ocrWorked = !controller.ocrRunning() &&
+                       controller.ocrVisible() && ocrPanel &&
+                       ocrPanel->isVisible() &&
+                       ocrPanel->width() > 700 && ocrPanel->width() <= 856 &&
+                       ocrPanel->height() >= 300 && ocrPanel->height() <= 366 &&
+                       ocrPreview && ocrPreview->property("status").toInt() == 1 &&
+                       ocrPreview->width() >= 180 && ocrPreview->width() <= 300 &&
+                       ocrTextItem && ocrTextItem->isVisible() &&
+                       ocrCopy && ocrCopy->isVisible();
+      bool ocrCopyWorked = !controller.ocrCopied();
+      const QString ocrArtifacts =
+          qEnvironmentVariable("OMARCHY_SCREENSHOT_TEST_ARTIFACT_DIR");
+      if (!ocrArtifacts.isEmpty() && ocrPanel) {
+        for (bool dark : {false, true}) {
+          controller.setDarkToolbar(dark);
+          QTest::qWait(50);
+          auto grab = ocrPanel->grabToImage();
+          if (!grab) {
+            ocrWorked = false;
+            continue;
+          }
+          QSignalSpy ready(grab.get(), &QQuickItemGrabResult::ready);
+          if (!ready.wait(1000)) {
+            ocrWorked = false;
+            continue;
+          }
+          ocrWorked &= grab->image().save(QDir(ocrArtifacts).filePath(
+              uiLocale.name() + (dark ? QStringLiteral("-ocr-dark.png")
+                                      : QStringLiteral("-ocr-light.png"))));
+        }
+      }
+      if (ocrCopy) {
+        const QPointF center = ocrCopy->mapToItem(
+            views[0]->rootObject(),
+            QPointF(ocrCopy->width() / 2, ocrCopy->height() / 2));
+        sendMouse(QEvent::MouseButtonPress, center, Qt::LeftButton,
+                  Qt::LeftButton);
+        sendMouse(QEvent::MouseButtonRelease, center, Qt::LeftButton,
+                  Qt::NoButton);
+        QTest::qWait(50);
+        ocrCopyWorked &= controller.ocrCopied();
+      }
+      ocrWorked &= ocrCopyWorked;
+      if (!ocrWorked)
+        QTextStream(stdout) << "OCR diagnostic: running="
+                            << controller.ocrRunning() << " visible="
+                            << controller.ocrVisible() << " panel="
+                            << (ocrPanel != nullptr) << " panelWidth="
+                            << (ocrPanel ? ocrPanel->width() : -1)
+                            << " panelHeight="
+                            << (ocrPanel ? ocrPanel->height() : -1)
+                            << " preview=" << (ocrPreview != nullptr)
+                            << " previewStatus="
+                            << (ocrPreview ? ocrPreview->property("status").toInt() : -1)
+                            << " previewWidth="
+                            << (ocrPreview ? ocrPreview->width() : -1)
+                            << " textVisible="
+                            << (ocrTextItem && ocrTextItem->isVisible())
+                            << " copyVisible="
+                            << (ocrCopy && ocrCopy->isVisible())
+                            << " copyWorked=" << ocrCopyWorked << " error="
+                            << controller.ocrError() << "\n";
       QTextStream(stdout) << "Mosaic preview: " << mosaicVisible
                           << ", toolbar: " << toolbarWorked
                           << ", toolbar order: " << toolbarOrderWorked
@@ -2460,7 +2560,8 @@ int main(int argc, char **argv) {
                           << ", captures ready: " << capturesReady
                           << ", double-click copy: " << doubleClickCopied
                           << ", translation layout: " << translationLayoutWorked
-                          << ", contextual text hint: " << contextualTextHintWorked << "\n";
+                          << ", contextual text hint: " << contextualTextHintWorked
+                          << ", ocr: " << ocrWorked << "\n";
       app.exit(mosaicVisible && toolbarWorked && toolbarOrderWorked &&
                        groupedToolbarWorked && redoShortcutWorked &&
                        escapeCloses &&
@@ -2484,7 +2585,8 @@ int main(int argc, char **argv) {
                        editorBorderDashed && editorBackgroundTransparent &&
                        previewRowsCentered && exportedTextRows &&
                        editorFocused && capturesReady && doubleClickCopied &&
-                       translationLayoutWorked && contextualTextHintWorked
+                       translationLayoutWorked && contextualTextHintWorked &&
+                       ocrWorked
                    ? 0
                    : 2);
     });

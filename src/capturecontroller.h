@@ -26,6 +26,8 @@ class QScreen;
 class QPainter;
 class VirtualPointer;
 class QThread;
+class OcrEngine;
+struct OcrResult;
 
 struct CaptureMonitor {
   QString name;
@@ -70,6 +72,11 @@ class CaptureController final : public QObject {
   // Bumped per capture so image URLs change and QML never shows a stale one.
   Q_PROPERTY(int captureGeneration READ captureGeneration NOTIFY imagesReadyChanged)
   Q_PROPERTY(bool exporting READ exporting NOTIFY exportingChanged)
+  Q_PROPERTY(bool ocrVisible READ ocrVisible NOTIFY ocrChanged)
+  Q_PROPERTY(bool ocrRunning READ ocrRunning NOTIFY ocrChanged)
+  Q_PROPERTY(QString ocrText READ ocrText NOTIFY ocrChanged)
+  Q_PROPERTY(QString ocrError READ ocrError NOTIFY ocrChanged)
+  Q_PROPERTY(bool ocrCopied READ ocrCopied NOTIFY ocrChanged)
 
 public:
   explicit CaptureController(QObject *parent = nullptr);
@@ -110,6 +117,12 @@ public:
   bool imagesReady() const { return m_imagesReady; }
   int captureGeneration() const { return m_captureGeneration; }
   bool exporting() const { return m_exporting; }
+  bool ocrVisible() const { return m_ocrVisible; }
+  bool ocrRunning() const { return m_ocrRunning; }
+  QString ocrText() const { return m_ocrText; }
+  QString ocrError() const { return m_ocrError; }
+  bool ocrCopied() const { return m_ocrCopied; }
+  QImage ocrPreview() const { return m_ocrPreviewImage; }
   QImage renderedImage() const;
   void paintScrollPreview(QPainter &painter, const QRectF &source,
                           const QRectF &target) const;
@@ -126,6 +139,9 @@ public:
   Q_INVOKABLE void save();
   Q_INVOKABLE void pin();
   void finishPin(bool success);
+  Q_INVOKABLE void startOcr();
+  Q_INVOKABLE void closeOcr();
+  Q_INVOKABLE void copyOcrText();
   Q_INVOKABLE void cancel();
   Q_INVOKABLE void setTool(const QString &tool);
   Q_INVOKABLE void restoreToolBeforeText();
@@ -162,6 +178,7 @@ signals:
   void statusChanged();
   void imagesReadyChanged();
   void exportingChanged();
+  void ocrChanged();
   void done();
   void pinRequested(const QImage &image, const QRectF &rect);
   void scrollStateChanged();
@@ -209,6 +226,8 @@ private:
   // Runs job off the GUI thread; job returns an error message or nothing.
   void exportInBackground(std::function<QString()> job);
   void finishExport(const QString &error);
+  QImage selectionBaseImage() const;
+  void finishOcr(int generation, const OcrResult &result);
   void addWindowCandidates(const QByteArray &json);
   static CaptureResult captureMonitors(const QStringList &names,
                                        const QList<bool> &direct);
@@ -266,4 +285,13 @@ private:
   bool m_exporting = false;
   QPointer<QThread> m_exportThread;
   QPointer<QThread> m_scrollCaptureThread;
+  std::unique_ptr<OcrEngine> m_ocr;
+  QPointer<QThread> m_ocrThread;
+  bool m_ocrVisible = false;
+  bool m_ocrRunning = false;
+  bool m_ocrCopied = false;
+  QImage m_ocrPreviewImage;
+  QString m_ocrText;
+  QString m_ocrError;
+  int m_ocrGeneration = 0;
 };

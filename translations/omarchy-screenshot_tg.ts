@@ -119,6 +119,10 @@
             <source>Pin screenshot</source>
             <translation>Маҳкам кардани акси экран</translation>
         </message>
+        <message>
+            <source>OCR · Recognize text</source>
+            <translation>OCR · Шинохтани матн</translation>
+        </message>
     </context>
     <context>
         <name>CaptureController</name>
@@ -206,6 +210,14 @@
             <source>Cannot pin screenshot.</source>
             <translation>Акси экранро маҳкам кардан имконнопазир аст.</translation>
         </message>
+        <message>
+            <source>OCR is not available.</source>
+            <translation>OCR дастрас нест.</translation>
+        </message>
+        <message>
+            <source>No text found.</source>
+            <translation>Матн ёфт нашуд.</translation>
+        </message>
     </context>
     <context>
         <name>LongOverlay</name>
@@ -235,6 +247,22 @@
         <message>
             <source>The selection contains several windows · Esc to cancel</source>
             <translation>Дар интихоб якчанд равзана ҳаст · Барои бекор кардан Esc</translation>
+        </message>
+        <message>
+            <source>Copy</source>
+            <translation>Нусхабардорӣ</translation>
+        </message>
+        <message>
+            <source>Copied</source>
+            <translation>Нусхабардорӣ шуд</translation>
+        </message>
+        <message>
+            <source>Close OCR result</source>
+            <translation>Бастани натиҷаи OCR</translation>
+        </message>
+        <message>
+            <source>Recognizing text…</source>
+            <translation>Шинохтани матн…</translation>
         </message>
     </context>
     <context>

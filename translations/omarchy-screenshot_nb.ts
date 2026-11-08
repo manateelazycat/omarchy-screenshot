@@ -119,6 +119,10 @@
             <source>Pin screenshot</source>
             <translation>Fest skjermbilde</translation>
         </message>
+        <message>
+            <source>OCR · Recognize text</source>
+            <translation>OCR · Gjenkjenn tekst</translation>
+        </message>
     </context>
     <context>
         <name>CaptureController</name>
@@ -206,6 +210,14 @@
             <source>Cannot pin screenshot.</source>
             <translation>Kan ikke feste skjermbildet.</translation>
         </message>
+        <message>
+            <source>OCR is not available.</source>
+            <translation>OCR er ikke tilgjengelig.</translation>
+        </message>
+        <message>
+            <source>No text found.</source>
+            <translation>Fant ingen tekst.</translation>
+        </message>
     </context>
     <context>
         <name>LongOverlay</name>
@@ -235,6 +247,22 @@
         <message>
             <source>The selection contains several windows · Esc to cancel</source>
             <translation>Markeringen inneholder flere vinduer · Esc for å avbryte</translation>
+        </message>
+        <message>
+            <source>Copy</source>
+            <translation>Kopier</translation>
+        </message>
+        <message>
+            <source>Copied</source>
+            <translation>Kopiert</translation>
+        </message>
+        <message>
+            <source>Close OCR result</source>
+            <translation>Lukk OCR-resultat</translation>
+        </message>
+        <message>
+            <source>Recognizing text…</source>
+            <translation>Gjenkjenner tekst…</translation>
         </message>
     </context>
     <context>

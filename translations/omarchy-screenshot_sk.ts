@@ -119,6 +119,10 @@
             <source>Pin screenshot</source>
             <translation>Pripnúť snímku obrazovky</translation>
         </message>
+        <message>
+            <source>OCR · Recognize text</source>
+            <translation>OCR · Rozpoznať text</translation>
+        </message>
     </context>
     <context>
         <name>CaptureController</name>
@@ -206,6 +210,14 @@
             <source>Cannot pin screenshot.</source>
             <translation>Snímku obrazovky nemožno pripnúť.</translation>
         </message>
+        <message>
+            <source>OCR is not available.</source>
+            <translation>OCR nie je k dispozícii.</translation>
+        </message>
+        <message>
+            <source>No text found.</source>
+            <translation>Nenašiel sa žiadny text.</translation>
+        </message>
     </context>
     <context>
         <name>LongOverlay</name>
@@ -235,6 +247,22 @@
         <message>
             <source>The selection contains several windows · Esc to cancel</source>
             <translation>Výber obsahuje viac okien · Esc na zrušenie</translation>
+        </message>
+        <message>
+            <source>Copy</source>
+            <translation>Kopírovať</translation>
+        </message>
+        <message>
+            <source>Copied</source>
+            <translation>Skopírované</translation>
+        </message>
+        <message>
+            <source>Close OCR result</source>
+            <translation>Zavrieť výsledok OCR</translation>
+        </message>
+        <message>
+            <source>Recognizing text…</source>
+            <translation>Rozpoznávanie textu…</translation>
         </message>
     </context>
     <context>

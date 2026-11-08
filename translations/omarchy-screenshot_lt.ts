@@ -119,6 +119,10 @@
             <source>Pin screenshot</source>
             <translation>Prisegti ekrano kopiją</translation>
         </message>
+        <message>
+            <source>OCR · Recognize text</source>
+            <translation>OCR · Atpažinti tekstą</translation>
+        </message>
     </context>
     <context>
         <name>CaptureController</name>
@@ -206,6 +210,14 @@
             <source>Cannot pin screenshot.</source>
             <translation>Nepavyko prisegti ekrano kopijos.</translation>
         </message>
+        <message>
+            <source>OCR is not available.</source>
+            <translation>OCR nepasiekiamas.</translation>
+        </message>
+        <message>
+            <source>No text found.</source>
+            <translation>Tekstas nerastas.</translation>
+        </message>
     </context>
     <context>
         <name>LongOverlay</name>
@@ -235,6 +247,22 @@
         <message>
             <source>The selection contains several windows · Esc to cancel</source>
             <translation>Pasirinkime yra keli langai · Esc – atšaukti</translation>
+        </message>
+        <message>
+            <source>Copy</source>
+            <translation>Kopijuoti</translation>
+        </message>
+        <message>
+            <source>Copied</source>
+            <translation>Nukopijuota</translation>
+        </message>
+        <message>
+            <source>Close OCR result</source>
+            <translation>Uždaryti OCR rezultatą</translation>
+        </message>
+        <message>
+            <source>Recognizing text…</source>
+            <translation>Atpažįstamas tekstas…</translation>
         </message>
     </context>
     <context>

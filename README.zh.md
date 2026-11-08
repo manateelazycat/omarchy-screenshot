@@ -10,6 +10,7 @@
 - 用图形、箭头、画笔、文字和编号标注截图，用马赛克遮挡隐私，支持撤销与重做。
 - 滚动截取长页面，自动拼接长图，支持继续截图和标注。
 - 一键复制或保存截图，也可双击选区快速复制。
+- 用 PP-OCRv6 Tiny 识别选区中的文字，一键复制结果。
 - 将截图和标注 Pin 到桌面最上层，支持多张贴图、跨显示器拖动，点击右上角 × 关闭。
 - 自定义标注颜色和深浅主题，自动记住偏好。
 - 支持 42 种语言／地区模式，适配多显示器、不同缩放和旋转屏幕。
@@ -27,6 +28,7 @@
 | 长图中滚轮 / Ctrl+滚轮 / 中键拖动 | 平移 / 缩放 / 拖动画面 |
 | 拖动 | 自由选区；选中后可移动或调整选区 |
 | 在普通截图或长图的选区空白处双击 | 将当前选区和已有标注复制到剪贴板并关闭界面；长图按原始分辨率导出，不受预览缩放或滚动位置影响 |
+| 未标注时按 O / 点击 OCR 按钮 | 识别选区文字，复制结果并显示在面板中 |
 | V / T / G / B / W | 选区 / 文字 / 矩形马赛克 / 编号标记 / 直线 |
 | R / E / A / D | 激活上次选择的矩形 / 圆形 / 箭头（含直线） / 画笔（含荧光笔）样式；点击主按钮展开该组图标栏 |
 | Shift+B | 聚光灯 |
@@ -50,6 +52,16 @@
 普通截图和滚动截图都排除鼠标光标，包括取帧时切换形状的软件光标。取帧前会暂时禁止合成器绘制光标，并等待约 550 ms 让隐藏状态生效；完成或失败后恢复原状态，不改动配置文件。
 
 贴图只在当前会话保留，不自动保存或复制。再次截图时会临时隐藏已有贴图，截图结束后恢复。有贴图时进程保持运行；未启用常驻模式时，关闭最后一张贴图后退出。
+
+## OCR
+
+选中区域后按 `O` 或点击 OCR 按钮，程序会在后台识别选区文字。识别读取原始截图像素，不包含标注；完成后自动复制到剪贴板，并在面板中显示，可再次选择或复制。按 Esc 关闭面板，再按一次退出截图。
+
+OCR 使用 PP-OCRv6 Tiny 和内置的 RapidOCRLite C++ 引擎。模型支持简体中文、繁体中文、英文和拉丁字母语言。日文、韩文、西里尔文、阿拉伯文、希伯来文、泰文等需要其他识别模型。
+
+马赛克和聚光灯标注不会阻止 OCR 读取文字，因为 OCR 读取的是原始截图像素。如果文字敏感，请先识别再标注。
+
+暂不支持长截图 OCR。OCR 只对普通选区可用。
 
 ## 界面语言
 
@@ -91,12 +103,20 @@ cmake --build build -j
 ./build/omarchy-screenshot
 ```
 
+配置阶段会获取 RapidOCRLite，并把 PP-OCRv6 Tiny 模型下载到构建目录。离线构建时，可提前解压 RapidOCRLite 源码，并指定模型目录：
+
+```sh
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release \
+  -DFETCHCONTENT_SOURCE_DIR_RAPIDOCRLITE=/path/to/RapidOCRLite \
+  -DOMARCHY_SCREENSHOT_OCR_MODEL_DIR=/path/to/models
+```
+
 本地安装（同时配置常驻模式所需的 service 路径）：
 
 ```sh
 cmake -S . -B build -DCMAKE_INSTALL_PREFIX=$HOME/.local -DSYSTEMD_USER_UNIT_DIR=$HOME/.local/share/systemd/user
 cmake --build build -j
-cmake --install build
+cmake --install build --component omarchy-screenshot
 ```
 
 ### Omarchy 栏插件
@@ -114,7 +134,7 @@ omarchy plugin add https://github.com/manateelazycat/omarchy-screenshot --enable
 
 ### 测试
 
-`ctest --test-dir build --output-on-failure` 无需桌面会话，可检查翻译、滚动拼接、光标隐藏与恢复、常驻进程及不同缩放下的图像采样。在 Hyprland 中运行 `./build/cursor-live-test` 可验证鼠标跨屏移动、切换三种光标时的普通截图和滚动取帧；测试期间各屏会短暂显示纯色画面。以下自检可用 `./build/omarchy-screenshot` 加对应参数运行：
+`ctest --test-dir build --output-on-failure` 无需桌面会话，可检查翻译、滚动拼接、光标隐藏与恢复、常驻进程、OCR 及不同缩放下的图像采样。在 Hyprland 中运行 `./build/cursor-live-test` 可验证鼠标跨屏移动、切换三种光标时的普通截图和滚动取帧；测试期间各屏会短暂显示纯色画面。以下自检可用 `./build/omarchy-screenshot` 加对应参数运行：
 
 | 参数 | 检查内容 |
 | --- | --- |
@@ -155,4 +175,4 @@ hl.layer_rule({ match = { namespace = "^omarchy-screenshot$" }, no_anim = true, 
 
 ## 许可证
 
-Copyright (C) 2026 Andy Stewart。源码使用 [GPL-3.0-only](LICENSE)；随附的[虚拟指针协议](protocols/wlr-virtual-pointer-unstable-v1.xml)使用 MIT 许可证。
+Copyright (C) 2026 Andy Stewart。源码使用 [GPL-3.0-only](LICENSE)；随附的[虚拟指针协议](protocols/wlr-virtual-pointer-unstable-v1.xml)使用 MIT 许可证；RapidOCRLite 及其 OCR 组件使用 Apache-2.0 和 BSD-3-Clause 许可证。

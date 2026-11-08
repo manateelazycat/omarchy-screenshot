@@ -119,6 +119,10 @@
             <source>Pin screenshot</source>
             <translation>Скриншотту бекитүү</translation>
         </message>
+        <message>
+            <source>OCR · Recognize text</source>
+            <translation>OCR · Текстти таануу</translation>
+        </message>
     </context>
     <context>
         <name>CaptureController</name>
@@ -206,6 +210,14 @@
             <source>Cannot pin screenshot.</source>
             <translation>Скриншотту бекитүү мүмкүн эмес.</translation>
         </message>
+        <message>
+            <source>OCR is not available.</source>
+            <translation>OCR жеткиликсиз.</translation>
+        </message>
+        <message>
+            <source>No text found.</source>
+            <translation>Текст табылган жок.</translation>
+        </message>
     </context>
     <context>
         <name>LongOverlay</name>
@@ -235,6 +247,22 @@
         <message>
             <source>The selection contains several windows · Esc to cancel</source>
             <translation>Тандоодо бир нече терезе бар · Жокко чыгаруу үчүн Esc</translation>
+        </message>
+        <message>
+            <source>Copy</source>
+            <translation>Көчүрүү</translation>
+        </message>
+        <message>
+            <source>Copied</source>
+            <translation>Көчүрүлдү</translation>
+        </message>
+        <message>
+            <source>Close OCR result</source>
+            <translation>OCR жыйынтыгын жабуу</translation>
+        </message>
+        <message>
+            <source>Recognizing text…</source>
+            <translation>Текст таанылууда…</translation>
         </message>
     </context>
     <context>

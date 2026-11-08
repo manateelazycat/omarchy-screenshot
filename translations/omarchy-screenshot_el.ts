@@ -119,6 +119,10 @@
             <source>Pin screenshot</source>
             <translation>Καρφίτσωμα στιγμιότυπου</translation>
         </message>
+        <message>
+            <source>OCR · Recognize text</source>
+            <translation>OCR · Αναγνώριση κειμένου</translation>
+        </message>
     </context>
     <context>
         <name>CaptureController</name>
@@ -206,6 +210,14 @@
             <source>Cannot pin screenshot.</source>
             <translation>Δεν είναι δυνατό το καρφίτσωμα του στιγμιότυπου.</translation>
         </message>
+        <message>
+            <source>OCR is not available.</source>
+            <translation>Το OCR δεν είναι διαθέσιμο.</translation>
+        </message>
+        <message>
+            <source>No text found.</source>
+            <translation>Δεν βρέθηκε κείμενο.</translation>
+        </message>
     </context>
     <context>
         <name>LongOverlay</name>
@@ -235,6 +247,22 @@
         <message>
             <source>The selection contains several windows · Esc to cancel</source>
             <translation>Η επιλογή περιέχει πολλά παράθυρα · Esc για ακύρωση</translation>
+        </message>
+        <message>
+            <source>Copy</source>
+            <translation>Αντιγραφή</translation>
+        </message>
+        <message>
+            <source>Copied</source>
+            <translation>Αντιγράφηκε</translation>
+        </message>
+        <message>
+            <source>Close OCR result</source>
+            <translation>Κλείσιμο αποτελέσματος OCR</translation>
+        </message>
+        <message>
+            <source>Recognizing text…</source>
+            <translation>Αναγνώριση κειμένου…</translation>
         </message>
     </context>
     <context>

@@ -119,6 +119,10 @@
             <source>Pin screenshot</source>
             <translation>Ekran görüntüsünü sabitlə</translation>
         </message>
+        <message>
+            <source>OCR · Recognize text</source>
+            <translation>OCR · Mətni tanı</translation>
+        </message>
     </context>
     <context>
         <name>CaptureController</name>
@@ -206,6 +210,14 @@
             <source>Cannot pin screenshot.</source>
             <translation>Ekran görüntüsünü sabitləmək mümkün deyil.</translation>
         </message>
+        <message>
+            <source>OCR is not available.</source>
+            <translation>OCR mövcud deyil.</translation>
+        </message>
+        <message>
+            <source>No text found.</source>
+            <translation>Mətn tapılmadı.</translation>
+        </message>
     </context>
     <context>
         <name>LongOverlay</name>
@@ -235,6 +247,22 @@
         <message>
             <source>The selection contains several windows · Esc to cancel</source>
             <translation>Seçimdə bir neçə pəncərə var · Ləğv etmək üçün Esc</translation>
+        </message>
+        <message>
+            <source>Copy</source>
+            <translation>Kopyala</translation>
+        </message>
+        <message>
+            <source>Copied</source>
+            <translation>Kopyalandı</translation>
+        </message>
+        <message>
+            <source>Close OCR result</source>
+            <translation>OCR nəticəsini bağla</translation>
+        </message>
+        <message>
+            <source>Recognizing text…</source>
+            <translation>Mətn tanınır…</translation>
         </message>
     </context>
     <context>

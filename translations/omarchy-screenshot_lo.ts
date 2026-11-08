@@ -119,6 +119,10 @@
             <source>Pin screenshot</source>
             <translation>ປັກໝຸດຮູບພາບໜ້າຈໍ</translation>
         </message>
+        <message>
+            <source>OCR · Recognize text</source>
+            <translation>OCR · ຮັບຮູ້ຂໍ້ຄວາມ</translation>
+        </message>
     </context>
     <context>
         <name>CaptureController</name>
@@ -206,6 +210,14 @@
             <source>Cannot pin screenshot.</source>
             <translation>ບໍ່ສາມາດປັກໝຸດຮູບພາບໜ້າຈໍໄດ້.</translation>
         </message>
+        <message>
+            <source>OCR is not available.</source>
+            <translation>OCR ບໍ່ພ້ອມໃຊ້.</translation>
+        </message>
+        <message>
+            <source>No text found.</source>
+            <translation>ບໍ່ພົບຂໍ້ຄວາມ.</translation>
+        </message>
     </context>
     <context>
         <name>LongOverlay</name>
@@ -235,6 +247,22 @@
         <message>
             <source>The selection contains several windows · Esc to cancel</source>
             <translation>ການເລືອກມີຫຼາຍໜ້າຕ່າງ · Esc ເພື່ອຍົກເລີກ</translation>
+        </message>
+        <message>
+            <source>Copy</source>
+            <translation>ຄັດລອກ</translation>
+        </message>
+        <message>
+            <source>Copied</source>
+            <translation>ຄັດລອກແລ້ວ</translation>
+        </message>
+        <message>
+            <source>Close OCR result</source>
+            <translation>ປິດຜົນ OCR</translation>
+        </message>
+        <message>
+            <source>Recognizing text…</source>
+            <translation>ກຳລັງຮັບຮູ້ຂໍ້ຄວາມ…</translation>
         </message>
     </context>
     <context>

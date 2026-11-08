@@ -119,6 +119,10 @@
             <source>Pin screenshot</source>
             <translation>Festa skjámynd</translation>
         </message>
+        <message>
+            <source>OCR · Recognize text</source>
+            <translation>OCR · Þekkja texta</translation>
+        </message>
     </context>
     <context>
         <name>CaptureController</name>
@@ -206,6 +210,14 @@
             <source>Cannot pin screenshot.</source>
             <translation>Ekki er hægt að festa skjámyndina.</translation>
         </message>
+        <message>
+            <source>OCR is not available.</source>
+            <translation>OCR er ekki tiltækt.</translation>
+        </message>
+        <message>
+            <source>No text found.</source>
+            <translation>Enginn texti fannst.</translation>
+        </message>
     </context>
     <context>
         <name>LongOverlay</name>
@@ -235,6 +247,22 @@
         <message>
             <source>The selection contains several windows · Esc to cancel</source>
             <translation>Valið inniheldur marga glugga · Esc til að hætta við</translation>
+        </message>
+        <message>
+            <source>Copy</source>
+            <translation>Afrita</translation>
+        </message>
+        <message>
+            <source>Copied</source>
+            <translation>Afritað</translation>
+        </message>
+        <message>
+            <source>Close OCR result</source>
+            <translation>Loka OCR-niðurstöðu</translation>
+        </message>
+        <message>
+            <source>Recognizing text…</source>
+            <translation>Þekki texta…</translation>
         </message>
     </context>
     <context>

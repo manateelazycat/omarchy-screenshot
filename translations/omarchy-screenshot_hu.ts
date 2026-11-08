@@ -119,6 +119,10 @@
             <source>Pin screenshot</source>
             <translation>Képernyőkép rögzítése</translation>
         </message>
+        <message>
+            <source>OCR · Recognize text</source>
+            <translation>OCR · Szöveg felismerése</translation>
+        </message>
     </context>
     <context>
         <name>CaptureController</name>
@@ -206,6 +210,14 @@
             <source>Cannot pin screenshot.</source>
             <translation>A képernyőkép nem rögzíthető.</translation>
         </message>
+        <message>
+            <source>OCR is not available.</source>
+            <translation>Az OCR nem érhető el.</translation>
+        </message>
+        <message>
+            <source>No text found.</source>
+            <translation>Nem található szöveg.</translation>
+        </message>
     </context>
     <context>
         <name>LongOverlay</name>
@@ -235,6 +247,22 @@
         <message>
             <source>The selection contains several windows · Esc to cancel</source>
             <translation>A kijelölés több ablakot tartalmaz · Megszakítás: Esc</translation>
+        </message>
+        <message>
+            <source>Copy</source>
+            <translation>Másolás</translation>
+        </message>
+        <message>
+            <source>Copied</source>
+            <translation>Másolva</translation>
+        </message>
+        <message>
+            <source>Close OCR result</source>
+            <translation>OCR-eredmény bezárása</translation>
+        </message>
+        <message>
+            <source>Recognizing text…</source>
+            <translation>Szöveg felismerése…</translation>
         </message>
     </context>
     <context>

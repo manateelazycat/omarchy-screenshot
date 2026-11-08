@@ -119,6 +119,10 @@
             <source>Pin screenshot</source>
             <translation>Schermafbeelding vastzetten</translation>
         </message>
+        <message>
+            <source>OCR · Recognize text</source>
+            <translation>OCR · Tekst herkennen</translation>
+        </message>
     </context>
     <context>
         <name>CaptureController</name>
@@ -206,6 +210,14 @@
             <source>Cannot pin screenshot.</source>
             <translation>Kan de schermafbeelding niet vastzetten.</translation>
         </message>
+        <message>
+            <source>OCR is not available.</source>
+            <translation>OCR is niet beschikbaar.</translation>
+        </message>
+        <message>
+            <source>No text found.</source>
+            <translation>Geen tekst gevonden.</translation>
+        </message>
     </context>
     <context>
         <name>LongOverlay</name>
@@ -235,6 +247,22 @@
         <message>
             <source>The selection contains several windows · Esc to cancel</source>
             <translation>De selectie bevat meerdere vensters · Esc om te annuleren</translation>
+        </message>
+        <message>
+            <source>Copy</source>
+            <translation>Kopiëren</translation>
+        </message>
+        <message>
+            <source>Copied</source>
+            <translation>Gekopieerd</translation>
+        </message>
+        <message>
+            <source>Close OCR result</source>
+            <translation>OCR-resultaat sluiten</translation>
+        </message>
+        <message>
+            <source>Recognizing text…</source>
+            <translation>Tekst wordt herkend…</translation>
         </message>
     </context>
     <context>

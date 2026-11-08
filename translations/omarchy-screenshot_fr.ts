@@ -119,6 +119,10 @@
             <source>Pin screenshot</source>
             <translation>Épingler la capture</translation>
         </message>
+        <message>
+            <source>OCR · Recognize text</source>
+            <translation>OCR · Reconnaître le texte</translation>
+        </message>
     </context>
     <context>
         <name>CaptureController</name>
@@ -206,6 +210,14 @@
             <source>Cannot pin screenshot.</source>
             <translation>Impossible d’épingler la capture.</translation>
         </message>
+        <message>
+            <source>OCR is not available.</source>
+            <translation>OCR n'est pas disponible.</translation>
+        </message>
+        <message>
+            <source>No text found.</source>
+            <translation>Aucun texte trouvé.</translation>
+        </message>
     </context>
     <context>
         <name>LongOverlay</name>
@@ -235,6 +247,22 @@
         <message>
             <source>The selection contains several windows · Esc to cancel</source>
             <translation>La sélection contient plusieurs fenêtres · Esc pour annuler</translation>
+        </message>
+        <message>
+            <source>Copy</source>
+            <translation>Copier</translation>
+        </message>
+        <message>
+            <source>Copied</source>
+            <translation>Copié</translation>
+        </message>
+        <message>
+            <source>Close OCR result</source>
+            <translation>Fermer le résultat OCR</translation>
+        </message>
+        <message>
+            <source>Recognizing text…</source>
+            <translation>Reconnaissance du texte…</translation>
         </message>
     </context>
     <context>

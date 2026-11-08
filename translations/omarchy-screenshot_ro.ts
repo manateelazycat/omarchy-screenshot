@@ -119,6 +119,10 @@
             <source>Pin screenshot</source>
             <translation>Fixează captura de ecran</translation>
         </message>
+        <message>
+            <source>OCR · Recognize text</source>
+            <translation>OCR · Recunoaște textul</translation>
+        </message>
     </context>
     <context>
         <name>CaptureController</name>
@@ -206,6 +210,14 @@
             <source>Cannot pin screenshot.</source>
             <translation>Captura de ecran nu poate fi fixată.</translation>
         </message>
+        <message>
+            <source>OCR is not available.</source>
+            <translation>OCR nu este disponibil.</translation>
+        </message>
+        <message>
+            <source>No text found.</source>
+            <translation>Nu a fost găsit text.</translation>
+        </message>
     </context>
     <context>
         <name>LongOverlay</name>
@@ -235,6 +247,22 @@
         <message>
             <source>The selection contains several windows · Esc to cancel</source>
             <translation>Selecția conține mai multe ferestre · Esc pentru anulare</translation>
+        </message>
+        <message>
+            <source>Copy</source>
+            <translation>Copiază</translation>
+        </message>
+        <message>
+            <source>Copied</source>
+            <translation>Copiat</translation>
+        </message>
+        <message>
+            <source>Close OCR result</source>
+            <translation>Închide rezultatul OCR</translation>
+        </message>
+        <message>
+            <source>Recognizing text…</source>
+            <translation>Se recunoaște textul…</translation>
         </message>
     </context>
     <context>
