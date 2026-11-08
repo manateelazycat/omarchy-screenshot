@@ -109,10 +109,16 @@ Item {
 
     Keys.onPressed: event => {
         if (event.key === Qt.Key_Escape) {
-            if (captureController.scrollState === 1)
+            if (captureController.ocrVisible)
+                captureController.closeOcr()
+            else if (captureController.scrollState === 1)
                 captureController.cancelScrollChoice()
             else
                 captureController.cancel()
+            event.accepted = true
+            return
+        }
+        if (captureController.ocrVisible) {
             event.accepted = true
             return
         }
@@ -689,11 +695,314 @@ Item {
         editorRect: Qt.rect(editor.x, editor.y, editor.width, editor.height)
         anchors.fill: parent
         z: 10
-        toolbarVisible: captureController.selected && captureController.toolbarScreen === root.screenIndex
+        toolbarVisible: captureController.selected && !captureController.ocrVisible &&
+                        captureController.toolbarScreen === root.screenIndex
         selectionRect: Qt.rect(root.localX, root.localY,
                                captureController.selection.width, captureController.selection.height)
         onCommitRequested: if (editor.visible) editor.commitText()
         onFocusRequested: root.forceActiveFocus()
+    }
+
+    Rectangle {
+        id: ocrPanel
+        objectName: "ocrPanel"
+        visible: captureController.ocrVisible &&
+                 captureController.toolbarScreen === root.screenIndex
+        onVisibleChanged: if (visible) ocrText.forceActiveFocus()
+        z: 15
+        readonly property bool dark: captureController.darkToolbar
+        readonly property color mutedInk: dark ? "#9aa7b4" : "#6b7580"
+        readonly property color resultSurface: dark ? "#19212b" : "#f3f5f8"
+        readonly property color previewSurface: "#111114"
+        readonly property color accentFill: "#ff9f0a"
+        readonly property color accentInk: "#17110a"
+        readonly property real spaceBelow:
+            root.height - (root.localY + captureController.selection.height) - 8
+        readonly property real spaceAbove: root.localY - 8
+        readonly property string previewSource:
+            screenIndex >= 0 && captureController.imagesReady &&
+            captureController.ocrVisible
+            ? "image://captures/selection/" + captureController.captureGeneration + "/" +
+              Math.round(captureController.selection.x) + "-" +
+              Math.round(captureController.selection.y) + "-" +
+              Math.round(captureController.selection.width) + "-" +
+              Math.round(captureController.selection.height)
+            : ""
+        width: Math.min(856, root.width - 24)
+        height: Math.min(366, root.height - 16)
+        radius: 8
+        color: annotationToolbar.panelSurface
+        border.color: annotationToolbar.panelBorder
+        clip: true
+        x: Math.max(8, Math.min(root.width - width - 8,
+             root.localX + captureController.selection.width / 2 - width / 2))
+        y: Math.max(8, Math.min(root.height - height - 8,
+             spaceBelow >= spaceAbove
+             ? root.localY + captureController.selection.height + 8
+             : root.localY - height - 8))
+
+        Rectangle {
+            id: ocrHeader
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 48
+            color: "transparent"
+
+            Rectangle {
+                id: ocrTitleMark
+                anchors.left: parent.left
+                anchors.leftMargin: 15
+                anchors.verticalCenter: parent.verticalCenter
+                width: 26
+                height: 26
+                radius: 6
+                color: Qt.rgba(1, 0.623, 0.039, 0.14)
+
+                ToolbarGlyph {
+                    anchors.centerIn: parent
+                    width: 16
+                    height: 16
+                    action: "ocr"
+                    accentColor: ocrPanel.accentFill
+                    darkMode: ocrPanel.dark
+                }
+            }
+
+            Text {
+                id: ocrTitle
+                objectName: "ocrTitle"
+                anchors.left: ocrTitleMark.right
+                anchors.leftMargin: 9
+                anchors.verticalCenter: parent.verticalCenter
+                text: "OCR"
+                color: annotationToolbar.toolbarInk
+                font.pixelSize: 14
+                font.bold: true
+            }
+
+            Rectangle {
+                id: ocrClose
+                objectName: "ocrClose"
+                anchors.right: parent.right
+                anchors.rightMargin: 11
+                anchors.verticalCenter: parent.verticalCenter
+                width: 28
+                height: 28
+                radius: 5
+                color: ocrCloseMouse.containsMouse ? annotationToolbar.toolbarHover
+                                                   : "transparent"
+                Accessible.name: qsTr("Close OCR result")
+                Text {
+                    anchors.centerIn: parent
+                    text: "×"
+                    color: annotationToolbar.toolbarInk
+                    font.pixelSize: 18
+                }
+                MouseArea {
+                    id: ocrCloseMouse
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        captureController.closeOcr()
+                        root.forceActiveFocus()
+                    }
+                }
+            }
+        }
+
+        Item {
+            id: ocrBody
+            anchors.top: parent.top
+            anchors.topMargin: ocrHeader.height
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: ocrFooter.top
+            clip: true
+            readonly property real previewWidth:
+                Math.min(278, Math.max(150, width * 0.33))
+
+            Rectangle {
+                id: ocrPreviewPane
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
+                width: parent.previewWidth
+                color: "transparent"
+
+                Rectangle {
+                    anchors.fill: parent
+                    anchors.margins: 12
+                    radius: 6
+                    color: ocrPanel.previewSurface
+                    clip: true
+
+                    Image {
+                        id: ocrPreviewImage
+                        objectName: "ocrPreviewImage"
+                        anchors.fill: parent
+                        source: ocrPanel.previewSource
+                        sourceSize.width: 560
+                        sourceSize.height: 480
+                        fillMode: Image.PreserveAspectFit
+                        smooth: true
+                        cache: false
+                    }
+                }
+            }
+
+            Rectangle {
+                id: ocrDivider
+                anchors.left: ocrPreviewPane.right
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.topMargin: 12
+                anchors.bottomMargin: 12
+                width: 1
+                color: annotationToolbar.panelBorder
+                opacity: 0.55
+            }
+
+            Rectangle {
+                id: ocrResultPane
+                anchors.left: ocrDivider.right
+                anchors.right: parent.right
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.margins: 12
+                radius: 6
+                color: ocrPanel.resultSurface
+                clip: true
+
+                Flickable {
+                    id: ocrTextScroll
+                    anchors.fill: parent
+                    anchors.margins: 13
+                    visible: !captureController.ocrRunning &&
+                             captureController.ocrError.length === 0
+                    clip: true
+                    contentWidth: width
+                    contentHeight: ocrText.contentHeight
+                    interactive: false
+                    boundsBehavior: Flickable.StopAtBounds
+                    WheelHandler {
+                        onWheel: event => {
+                            const limit = Math.max(0, ocrTextScroll.contentHeight -
+                                                   ocrTextScroll.height)
+                            ocrTextScroll.contentY = Math.max(0, Math.min(
+                                limit, ocrTextScroll.contentY - event.angleDelta.y / 2))
+                        }
+                    }
+                    TextEdit {
+                        id: ocrText
+                        objectName: "ocrText"
+                        width: ocrTextScroll.width
+                        height: Math.max(ocrTextScroll.height, contentHeight)
+                        text: captureController.ocrText
+                        readOnly: true
+                        selectByMouse: true
+                        wrapMode: TextEdit.Wrap
+                        color: annotationToolbar.toolbarInk
+                        selectionColor: "#2f6feb"
+                        selectedTextColor: "white"
+                        font.pixelSize: 13
+                        activeFocusOnPress: true
+                        Keys.onEscapePressed: {
+                            captureController.closeOcr()
+                            root.forceActiveFocus()
+                        }
+                    }
+                }
+
+                Text {
+                    anchors.fill: parent
+                    anchors.margins: 16
+                    visible: !captureController.ocrRunning &&
+                             captureController.ocrError.length > 0
+                    text: captureController.ocrError
+                    color: ocrPanel.dark ? "#ff8a8a" : "#b42318"
+                    font.pixelSize: 13
+                    wrapMode: Text.Wrap
+                    verticalAlignment: Text.AlignVCenter
+                }
+
+                Column {
+                    id: ocrSkeleton
+                    anchors.fill: parent
+                    anchors.margins: 16
+                    visible: captureController.ocrRunning
+                    spacing: 11
+                    Repeater {
+                        model: [0.93, 0.87, 0.70, 0.54]
+                        Rectangle {
+                            width: ocrSkeleton.width * modelData
+                            height: 8
+                            radius: 4
+                            color: annotationToolbar.toolbarInk
+                            opacity: 0.12
+                        }
+                    }
+                    SequentialAnimation on opacity {
+                        running: captureController.ocrRunning
+                        loops: Animation.Infinite
+                        NumberAnimation { to: 0.45; duration: 700; easing.type: Easing.InOutSine }
+                        NumberAnimation { to: 1; duration: 700; easing.type: Easing.InOutSine }
+                    }
+                }
+            }
+        }
+
+        Rectangle {
+            id: ocrFooter
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            height: 52
+            color: "transparent"
+
+            Text {
+                id: ocrStatus
+                anchors.left: parent.left
+                anchors.leftMargin: 16
+                anchors.verticalCenter: parent.verticalCenter
+                visible: captureController.ocrRunning
+                text: qsTr("Recognizing text…")
+                color: ocrPanel.mutedInk
+                font.pixelSize: 12
+            }
+
+            Rectangle {
+                id: ocrCopy
+                objectName: "ocrCopy"
+                anchors.right: parent.right
+                anchors.rightMargin: 12
+                anchors.verticalCenter: parent.verticalCenter
+                width: Math.max(96, ocrCopyLabel.implicitWidth + 28)
+                height: 32
+                radius: 5
+                visible: !captureController.ocrRunning &&
+                         captureController.ocrError.length === 0 &&
+                         captureController.ocrText.length > 0
+                color: ocrCopyMouse.containsMouse ? Qt.lighter(ocrPanel.accentFill, 1.08)
+                                                  : ocrPanel.accentFill
+                Text {
+                    id: ocrCopyLabel
+                    anchors.centerIn: parent
+                    text: captureController.ocrCopied ? qsTr("Copied") : qsTr("Copy")
+                    color: ocrPanel.accentInk
+                    font.pixelSize: 12
+                    font.bold: true
+                }
+                MouseArea {
+                    id: ocrCopyMouse
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: captureController.copyOcrText()
+                }
+            }
+        }
     }
 
     Rectangle {

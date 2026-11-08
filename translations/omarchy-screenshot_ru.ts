@@ -119,6 +119,10 @@
             <source>Pin screenshot</source>
             <translation>Закрепить снимок экрана</translation>
         </message>
+        <message>
+            <source>OCR · Recognize text</source>
+            <translation>OCR · Распознать текст</translation>
+        </message>
     </context>
     <context>
         <name>CaptureController</name>
@@ -206,6 +210,14 @@
             <source>Cannot pin screenshot.</source>
             <translation>Не удалось закрепить снимок экрана.</translation>
         </message>
+        <message>
+            <source>OCR is not available.</source>
+            <translation>OCR недоступен.</translation>
+        </message>
+        <message>
+            <source>No text found.</source>
+            <translation>Текст не найден.</translation>
+        </message>
     </context>
     <context>
         <name>LongOverlay</name>
@@ -235,6 +247,22 @@
         <message>
             <source>The selection contains several windows · Esc to cancel</source>
             <translation>В выделении несколько окон · Esc — отмена</translation>
+        </message>
+        <message>
+            <source>Copy</source>
+            <translation>Копировать</translation>
+        </message>
+        <message>
+            <source>Copied</source>
+            <translation>Скопировано</translation>
+        </message>
+        <message>
+            <source>Close OCR result</source>
+            <translation>Закрыть результат OCR</translation>
+        </message>
+        <message>
+            <source>Recognizing text…</source>
+            <translation>Распознавание текста…</translation>
         </message>
     </context>
     <context>

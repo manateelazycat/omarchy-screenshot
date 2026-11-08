@@ -30,6 +30,7 @@ TestCase {
         property int startCount: 0
         property int resumeCount: 0
         property int pinCount: 0
+        property int ocrCount: 0
         property rect scrollRegion: Qt.rect(40, 100, 1100, 300)
         property int scrollHeight: 0
         property bool scrollAwaitingPane: false
@@ -44,6 +45,7 @@ TestCase {
         function startScroll() { startCount++ }
         function resumeScroll() { resumeCount++ }
         function pin() { pinCount++ }
+        function startOcr() { ocrCount++ }
     }
     Screenshot.AnnotationToolbar {
         id: normalToolbar
@@ -91,6 +93,7 @@ TestCase {
         captureController.startCount = 0
         captureController.resumeCount = 0
         captureController.pinCount = 0
+        captureController.ocrCount = 0
         normalToolbar.visible = true
         longToolbar.visible = false
         scrollCapture.visible = false
@@ -125,6 +128,22 @@ TestCase {
             verify(label.visible)
             verify(glyph !== null)
         }
+    }
+    function test_ocr_button_and_shortcut() {
+        let button = visualItem(normalToolbar, "tool_ocr")
+        verify(button !== null)
+        verify(button.visible)
+        compare(visualItem(normalToolbar, "toolLabel_ocr").text, "O:")
+        verify(visualItem(normalToolbar, "toolGlyph_ocr") !== null)
+        keyClick(Qt.Key_O)
+        compare(captureController.ocrCount, 1)
+        captureController.annotations = [{type: "marker"}]
+        keyClick(Qt.Key_O)
+        compare(captureController.ocrCount, 2)
+        normalToolbar.visible = false
+        longToolbar.visible = true
+        keyClick(Qt.Key_O)
+        compare(captureController.ocrCount, 2)
     }
     function test_pin_button_and_shortcut_data() {
         return [{tag: "normal", longImage: false}, {tag: "long", longImage: true}]

@@ -119,6 +119,10 @@
             <source>Pin screenshot</source>
             <translation>Pionnáil an ghabháil scáileáin</translation>
         </message>
+        <message>
+            <source>OCR · Recognize text</source>
+            <translation>OCR · Aithin téacs</translation>
+        </message>
     </context>
     <context>
         <name>CaptureController</name>
@@ -206,6 +210,14 @@
             <source>Cannot pin screenshot.</source>
             <translation>Ní féidir an ghabháil scáileáin a phionnáil.</translation>
         </message>
+        <message>
+            <source>OCR is not available.</source>
+            <translation>Níl OCR ar fáil.</translation>
+        </message>
+        <message>
+            <source>No text found.</source>
+            <translation>Níor aimsíodh téacs.</translation>
+        </message>
     </context>
     <context>
         <name>LongOverlay</name>
@@ -235,6 +247,22 @@
         <message>
             <source>The selection contains several windows · Esc to cancel</source>
             <translation>Tá roinnt fuinneog sa roghnú · Esc chun cealú</translation>
+        </message>
+        <message>
+            <source>Copy</source>
+            <translation>Cóipeáil</translation>
+        </message>
+        <message>
+            <source>Copied</source>
+            <translation>Cóipeáilte</translation>
+        </message>
+        <message>
+            <source>Close OCR result</source>
+            <translation>Dún toradh OCR</translation>
+        </message>
+        <message>
+            <source>Recognizing text…</source>
+            <translation>Téacs á aithint…</translation>
         </message>
     </context>
     <context>

@@ -119,6 +119,10 @@
             <source>Pin screenshot</source>
             <translation>הצמדת צילום מסך</translation>
         </message>
+        <message>
+            <source>OCR · Recognize text</source>
+            <translation>OCR · זיהוי טקסט</translation>
+        </message>
     </context>
     <context>
         <name>CaptureController</name>
@@ -206,6 +210,14 @@
             <source>Cannot pin screenshot.</source>
             <translation>לא ניתן להצמיד את צילום המסך.</translation>
         </message>
+        <message>
+            <source>OCR is not available.</source>
+            <translation>OCR אינו זמין.</translation>
+        </message>
+        <message>
+            <source>No text found.</source>
+            <translation>לא נמצא טקסט.</translation>
+        </message>
     </context>
     <context>
         <name>LongOverlay</name>
@@ -235,6 +247,22 @@
         <message>
             <source>The selection contains several windows · Esc to cancel</source>
             <translation>הבחירה מכילה כמה חלונות · ⁦Esc⁩ לביטול</translation>
+        </message>
+        <message>
+            <source>Copy</source>
+            <translation>העתקה</translation>
+        </message>
+        <message>
+            <source>Copied</source>
+            <translation>הועתק</translation>
+        </message>
+        <message>
+            <source>Close OCR result</source>
+            <translation>סגירת תוצאת OCR</translation>
+        </message>
+        <message>
+            <source>Recognizing text…</source>
+            <translation>מזהה טקסט…</translation>
         </message>
     </context>
     <context>

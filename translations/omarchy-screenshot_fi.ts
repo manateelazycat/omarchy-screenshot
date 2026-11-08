@@ -119,6 +119,10 @@
             <source>Pin screenshot</source>
             <translation>Kiinnitä kuvakaappaus</translation>
         </message>
+        <message>
+            <source>OCR · Recognize text</source>
+            <translation>OCR · Tunnista teksti</translation>
+        </message>
     </context>
     <context>
         <name>CaptureController</name>
@@ -206,6 +210,14 @@
             <source>Cannot pin screenshot.</source>
             <translation>Kuvakaappausta ei voi kiinnittää.</translation>
         </message>
+        <message>
+            <source>OCR is not available.</source>
+            <translation>OCR ei ole käytettävissä.</translation>
+        </message>
+        <message>
+            <source>No text found.</source>
+            <translation>Tekstiä ei löytynyt.</translation>
+        </message>
     </context>
     <context>
         <name>LongOverlay</name>
@@ -235,6 +247,22 @@
         <message>
             <source>The selection contains several windows · Esc to cancel</source>
             <translation>Valinnassa on useita ikkunoita · Esc peruuttaa</translation>
+        </message>
+        <message>
+            <source>Copy</source>
+            <translation>Kopioi</translation>
+        </message>
+        <message>
+            <source>Copied</source>
+            <translation>Kopioitu</translation>
+        </message>
+        <message>
+            <source>Close OCR result</source>
+            <translation>Sulje OCR-tulos</translation>
+        </message>
+        <message>
+            <source>Recognizing text…</source>
+            <translation>Tunnistetaan tekstiä…</translation>
         </message>
     </context>
     <context>

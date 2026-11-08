@@ -119,6 +119,10 @@
             <source>Pin screenshot</source>
             <translation>スクリーンショットを固定</translation>
         </message>
+        <message>
+            <source>OCR · Recognize text</source>
+            <translation>OCR · テキストを認識</translation>
+        </message>
     </context>
     <context>
         <name>CaptureController</name>
@@ -206,6 +210,14 @@
             <source>Cannot pin screenshot.</source>
             <translation>スクリーンショットを固定できません。</translation>
         </message>
+        <message>
+            <source>OCR is not available.</source>
+            <translation>OCR は利用できません。</translation>
+        </message>
+        <message>
+            <source>No text found.</source>
+            <translation>テキストが見つかりません。</translation>
+        </message>
     </context>
     <context>
         <name>LongOverlay</name>
@@ -235,6 +247,22 @@
         <message>
             <source>The selection contains several windows · Esc to cancel</source>
             <translation>選択範囲に複数のウィンドウがあります · Esc でキャンセル</translation>
+        </message>
+        <message>
+            <source>Copy</source>
+            <translation>コピー</translation>
+        </message>
+        <message>
+            <source>Copied</source>
+            <translation>コピーしました</translation>
+        </message>
+        <message>
+            <source>Close OCR result</source>
+            <translation>OCR 結果を閉じる</translation>
+        </message>
+        <message>
+            <source>Recognizing text…</source>
+            <translation>テキストを認識しています…</translation>
         </message>
     </context>
     <context>

@@ -119,6 +119,10 @@
             <source>Pin screenshot</source>
             <translation>ეკრანის სურათის მიმაგრება</translation>
         </message>
+        <message>
+            <source>OCR · Recognize text</source>
+            <translation>OCR · ტექსტის ამოცნობა</translation>
+        </message>
     </context>
     <context>
         <name>CaptureController</name>
@@ -206,6 +210,14 @@
             <source>Cannot pin screenshot.</source>
             <translation>ეკრანის სურათის მიმაგრება ვერ მოხერხდა.</translation>
         </message>
+        <message>
+            <source>OCR is not available.</source>
+            <translation>OCR მიუწვდომელია.</translation>
+        </message>
+        <message>
+            <source>No text found.</source>
+            <translation>ტექსტი ვერ მოიძებნა.</translation>
+        </message>
     </context>
     <context>
         <name>LongOverlay</name>
@@ -235,6 +247,22 @@
         <message>
             <source>The selection contains several windows · Esc to cancel</source>
             <translation>მონიშვნაში რამდენიმე ფანჯარაა · გასაუქმებლად Esc</translation>
+        </message>
+        <message>
+            <source>Copy</source>
+            <translation>კოპირება</translation>
+        </message>
+        <message>
+            <source>Copied</source>
+            <translation>დაკოპირებულია</translation>
+        </message>
+        <message>
+            <source>Close OCR result</source>
+            <translation>OCR შედეგის დახურვა</translation>
+        </message>
+        <message>
+            <source>Recognizing text…</source>
+            <translation>ტექსტის ამოცნობა…</translation>
         </message>
     </context>
     <context>

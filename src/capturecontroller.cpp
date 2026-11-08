@@ -3,12 +3,14 @@
 
 #include "capturecontroller.h"
 #include "cursorcaptureguard.h"
+#include "ocr.h"
 #include "virtualpointer.h"
 
 #include "screencapture.h"
 
 #include <QBuffer>
 #include <QDateTime>
+#include <QDebug>
 #include <QDir>
 #include <QFontMetricsF>
 #include <QGuiApplication>
@@ -184,6 +186,8 @@ CaptureController::~CaptureController() {
     m_scrollCaptureThread->wait();
   if (m_exportThread)
     m_exportThread->wait();
+  if (m_ocrThread)
+    m_ocrThread->wait();
   saveAnnotationColor();
 }
 
@@ -304,6 +308,12 @@ void CaptureController::reset() {
   m_toolBeforeText = QStringLiteral("select");
   m_tool = QStringLiteral("select");
   m_toolVariants = defaultToolVariants();
+  ++m_ocrGeneration;
+  m_ocrVisible = false;
+  m_ocrCopied = false;
+  m_ocrPreviewImage = {};
+  m_ocrText.clear();
+  m_ocrError.clear();
   emit scrollStateChanged();
   emit scrollImageChanged();
   emit scrollAwaitingPaneChanged();
@@ -317,6 +327,7 @@ void CaptureController::reset() {
   emit annotationsChanged();
   emit statusChanged();
   emit imagesReadyChanged();
+  emit ocrChanged();
 }
 
 bool CaptureController::startCapture(QString *error) {
@@ -1455,7 +1466,7 @@ void CaptureController::paintScrollPreview(QPainter &painter,
   painter.restore();
 }
 
-QImage CaptureController::renderedImage() const {
+QImage CaptureController::selectionBaseImage() const {
   if (!m_selected || m_selection.isEmpty())
     return {};
   if (m_scrollState == ScrollState::Reviewing) {
@@ -1463,13 +1474,7 @@ QImage CaptureController::renderedImage() const {
         QRect(QPoint(0, 0), m_scrollStitcher.image().size()));
     if (source.isEmpty())
       return {};
-    QImage result(source.size(), QImage::Format_ARGB32_Premultiplied);
-    if (result.isNull())
-      return {};
-    result.fill(Qt::transparent);
-    QPainter painter(&result);
-    paintScrollPreview(painter, source, QRectF(QPointF(0, 0), source.size()));
-    return result;
+    return m_scrollStitcher.image().copy(source);
   }
   qreal scale = 1;
   for (const auto &monitor : m_monitors)
@@ -1500,6 +1505,31 @@ QImage CaptureController::renderedImage() const {
       painter.drawImage(target, monitor.image, source);
     }
   }
+  return result;
+}
+
+QImage CaptureController::renderedImage() const {
+  if (!m_selected || m_selection.isEmpty())
+    return {};
+  if (m_scrollState == ScrollState::Reviewing) {
+    const QRect source = m_selection.toAlignedRect().intersected(
+        QRect(QPoint(0, 0), m_scrollStitcher.image().size()));
+    if (source.isEmpty())
+      return {};
+    QImage result(source.size(), QImage::Format_ARGB32_Premultiplied);
+    if (result.isNull())
+      return {};
+    result.fill(Qt::transparent);
+    QPainter painter(&result);
+    paintScrollPreview(painter, source, QRectF(QPointF(0, 0), source.size()));
+    return result;
+  }
+  QImage result = selectionBaseImage();
+  if (result.isNull())
+    return {};
+  qreal scale = 1;
+  for (const auto &monitor : m_monitors)
+    scale = std::max(scale, monitor.image.width() / monitor.geometry.width());
   for (const QVariant &annotation : m_annotations) {
     const auto item = annotation.toMap();
     if (item.value(QStringLiteral("type")).toString() !=
@@ -1623,6 +1653,94 @@ void CaptureController::finishPin(bool success) {
     emit done();
   else
     setStatus(tr("Cannot pin screenshot."));
+}
+
+void CaptureController::startOcr() {
+  if (m_ocrRunning || !m_selected || m_selection.isEmpty())
+    return;
+  const QImage image = selectionBaseImage();
+  if (image.isNull()) {
+    m_ocrVisible = true;
+    m_ocrRunning = false;
+    m_ocrPreviewImage = {};
+    m_ocrText.clear();
+    m_ocrError = tr("OCR is not available.");
+    emit ocrChanged();
+    return;
+  }
+
+  m_ocrVisible = true;
+  m_ocrRunning = true;
+  m_ocrCopied = false;
+  m_ocrPreviewImage = image;
+  m_ocrText.clear();
+  m_ocrError.clear();
+  const int generation = ++m_ocrGeneration;
+  emit ocrChanged();
+
+  m_ocrThread = QThread::create([this, image, generation] {
+    if (!m_ocr)
+      m_ocr = std::make_unique<OcrEngine>();
+    const OcrResult result = m_ocr->recognize(image);
+    QMetaObject::invokeMethod(
+        this, [this, generation, result] { finishOcr(generation, result); },
+        Qt::QueuedConnection);
+  });
+  connect(m_ocrThread, &QThread::finished, m_ocrThread, &QObject::deleteLater);
+  m_ocrThread->start();
+}
+
+void CaptureController::closeOcr() {
+  if (!m_ocrVisible)
+    return;
+  ++m_ocrGeneration;
+  m_ocrVisible = false;
+  m_ocrCopied = false;
+  m_ocrPreviewImage = {};
+  m_ocrText.clear();
+  m_ocrError.clear();
+  emit ocrChanged();
+}
+
+void CaptureController::copyOcrText() {
+  if (m_ocrText.isEmpty())
+    return;
+  QString error;
+  if (copyBytes(m_ocrText.toUtf8(),
+                QStringLiteral("text/plain;charset=utf-8"), &error)) {
+    m_ocrCopied = true;
+    m_ocrError.clear();
+  } else {
+    m_ocrError = error;
+  }
+  emit ocrChanged();
+}
+
+void CaptureController::finishOcr(int generation, const OcrResult &result) {
+  m_ocrRunning = false;
+  if (generation != m_ocrGeneration) {
+    emit ocrChanged();
+    return;
+  }
+  if (result.error != OcrError::None) {
+    qWarning().noquote() << "OCR:" << result.detail;
+    m_ocrError = tr("OCR is not available.");
+    emit ocrChanged();
+    return;
+  }
+  if (result.lines.isEmpty()) {
+    m_ocrError = tr("No text found.");
+    emit ocrChanged();
+    return;
+  }
+
+  QStringList lines;
+  lines.reserve(result.lines.size());
+  for (const OcrLine &line : result.lines)
+    lines.append(line.text);
+  m_ocrText = lines.join(QLatin1Char('\n'));
+  m_ocrCopied = false;
+  emit ocrChanged();
 }
 
 void CaptureController::cancel() { emit done(); }

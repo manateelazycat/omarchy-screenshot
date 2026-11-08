@@ -119,6 +119,10 @@
             <source>Pin screenshot</source>
             <translation>Piespraust ekrānuzņēmumu</translation>
         </message>
+        <message>
+            <source>OCR · Recognize text</source>
+            <translation>OCR · Atpazīt tekstu</translation>
+        </message>
     </context>
     <context>
         <name>CaptureController</name>
@@ -206,6 +210,14 @@
             <source>Cannot pin screenshot.</source>
             <translation>Nevar piespraust ekrānuzņēmumu.</translation>
         </message>
+        <message>
+            <source>OCR is not available.</source>
+            <translation>OCR nav pieejams.</translation>
+        </message>
+        <message>
+            <source>No text found.</source>
+            <translation>Teksts nav atrasts.</translation>
+        </message>
     </context>
     <context>
         <name>LongOverlay</name>
@@ -235,6 +247,22 @@
         <message>
             <source>The selection contains several windows · Esc to cancel</source>
             <translation>Atlasē ir vairāki logi · Esc, lai atceltu</translation>
+        </message>
+        <message>
+            <source>Copy</source>
+            <translation>Kopēt</translation>
+        </message>
+        <message>
+            <source>Copied</source>
+            <translation>Kopēts</translation>
+        </message>
+        <message>
+            <source>Close OCR result</source>
+            <translation>Aizvērt OCR rezultātu</translation>
+        </message>
+        <message>
+            <source>Recognizing text…</source>
+            <translation>Notiek teksta atpazīšana…</translation>
         </message>
     </context>
     <context>

@@ -344,6 +344,19 @@ Canvas {
             fillPath(() => roundedRect(3.3, 3.3, 12.7, 12.7, 1.5), paper)
             fillPath(() => roundedRect(8, 8, 12.7, 12.7, 1.5), paper)
             break
+        case "ocr":
+            strokePath(() => {
+                ctx.moveTo(4, 9); ctx.lineTo(4, 4); ctx.lineTo(9, 4)
+                ctx.moveTo(15, 4); ctx.lineTo(20, 4); ctx.lineTo(20, 9)
+                ctx.moveTo(20, 15); ctx.lineTo(20, 20); ctx.lineTo(15, 20)
+                ctx.moveTo(9, 20); ctx.lineTo(4, 20); ctx.lineTo(4, 15)
+            })
+            strokePath(() => {
+                ctx.moveTo(8, 9); ctx.lineTo(16, 9)
+                ctx.moveTo(8, 12); ctx.lineTo(16, 12)
+                ctx.moveTo(8, 15); ctx.lineTo(13, 15)
+            })
+            break
         case "save":
             strokePath(() => {
                 ctx.moveTo(12, 3.4)

@@ -10,6 +10,7 @@ A Qt 6 screenshot and annotation tool for Hyprland and Omarchy, with frozen over
 - Annotate with shapes, arrows, a pen, text, and numbered markers, hide private details with mosaic, and undo or redo.
 - Capture long pages by scrolling, with automatic stitching; continue capturing and annotate the long image.
 - Copy or save in one click, or double-click the selection to copy it.
+- Recognize text in the selection with PP-OCRv6 Tiny, then copy it in one click.
 - Pin screenshots and annotations above other windows, keep multiple pins, drag across monitors, and dismiss each with its top-right × button.
 - Customize the annotation color and the light or dark theme; the app remembers your preferences.
 - Use it in 42 language or regional variants, with multiple monitors, mixed scaling, and rotated screens.
@@ -27,6 +28,7 @@ A Qt 6 screenshot and annotation tool for Hyprland and Omarchy, with frozen over
 | Wheel / Ctrl+wheel / middle-button drag on a long image | Scroll / zoom / pan |
 | Drag | Select a rectangle; move or resize an existing selection |
 | Double-click a blank area inside the selection | Copy the selection and its annotations to the clipboard and close the app; long images export at full resolution regardless of zoom or scroll position |
+| O / OCR button, before annotating | Recognize text in the selection, copy it, and show the result in a panel |
 | V / T / G / B / W | Selection / text / mosaic redaction / numbered marker / line |
 | R / E / A / D | Recall the last rectangle / ellipse / arrow (including line) / pen (including highlighter) style; click a group button to open its icon toolbar |
 | Shift+B | Spotlight |
@@ -50,6 +52,16 @@ Window captures include the pixels visible in the selection, including overlappi
 Normal and scrolling captures exclude the pointer, including software cursors changing shape during a frame. Each capture temporarily suppresses compositor cursor rendering and waits about 550 ms for it to take effect, then restores the previous state on success or failure without changing configuration files.
 
 Pins are temporary and are not automatically saved or copied. Existing pins hide during a new capture and return afterward. The process stays alive while pins remain; without resident mode, closing the last pin exits it.
+
+## OCR
+
+Press `O` or click the OCR button to recognize text in the current selection. Recognition runs in the background, reads the captured pixels without annotations, copies the result to the clipboard, and shows it in a panel where you can select or copy it again. Press Esc to close the panel, then Esc again to leave the capture.
+
+OCR uses PP-OCRv6 Tiny through the bundled RapidOCRLite C++ engine. The models support Simplified Chinese, Traditional Chinese, English, and Latin-script languages. Japanese, Korean, Cyrillic, Arabic, Hebrew, Thai, and other scripts need a different recognition model.
+
+Mosaic and spotlight annotations do not hide text from OCR, because OCR reads the original captured pixels. Annotate after running OCR if the text is sensitive.
+
+Long-image OCR is not supported yet. OCR is only available on normal selections.
 
 ## Interface languages
 
@@ -91,12 +103,20 @@ cmake --build build -j
 ./build/omarchy-screenshot
 ```
 
+The configure step fetches RapidOCRLite and downloads the PP-OCRv6 Tiny models into the build directory. For an offline build, extract the RapidOCRLite source and point the build at it and at a directory containing the three model files:
+
+```sh
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release \
+  -DFETCHCONTENT_SOURCE_DIR_RAPIDOCRLITE=/path/to/RapidOCRLite \
+  -DOMARCHY_SCREENSHOT_OCR_MODEL_DIR=/path/to/models
+```
+
 Install locally, configuring the service path for resident mode:
 
 ```sh
 cmake -S . -B build -DCMAKE_INSTALL_PREFIX=$HOME/.local -DSYSTEMD_USER_UNIT_DIR=$HOME/.local/share/systemd/user
 cmake --build build -j
-cmake --install build
+cmake --install build --component omarchy-screenshot
 ```
 
 ### Omarchy bar plugin
@@ -114,7 +134,7 @@ Remove the widget with `omarchy plugin remove io.github.manateelazycat.screensho
 
 ### Tests
 
-`ctest --test-dir build --output-on-failure` checks translations, scroll stitching, cursor suppression and restoration, the daemon, and image sampling at different scales without a desktop session. Inside Hyprland, `./build/cursor-live-test` checks monitor captures and scrolling frames while the pointer moves across outputs and changes between three shapes; it briefly covers each screen with a solid fixture. Run these additional checks with `./build/omarchy-screenshot` and the listed options:
+`ctest --test-dir build --output-on-failure` checks translations, scroll stitching, cursor suppression and restoration, the daemon, OCR, and image sampling at different scales without a desktop session. Inside Hyprland, `./build/cursor-live-test` checks monitor captures and scrolling frames while the pointer moves across outputs and changes between three shapes; it briefly covers each screen with a solid fixture. Run these additional checks with `./build/omarchy-screenshot` and the listed options:
 
 | Option | Checks |
 | --- | --- |
@@ -155,4 +175,4 @@ hl.layer_rule({ match = { namespace = "^omarchy-screenshot$" }, no_anim = true, 
 
 ## License
 
-Copyright (C) 2026 Andy Stewart. Source code: [GPL-3.0-only](LICENSE). Bundled [virtual pointer protocol](protocols/wlr-virtual-pointer-unstable-v1.xml): MIT.
+Copyright (C) 2026 Andy Stewart. Source code: [GPL-3.0-only](LICENSE). Bundled [virtual pointer protocol](protocols/wlr-virtual-pointer-unstable-v1.xml): MIT. RapidOCRLite and its OCR components: Apache-2.0 and BSD-3-Clause.

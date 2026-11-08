@@ -38,7 +38,8 @@ Item {
         {key: "=", action: "zoom_in", hint: qsTr("Zoom in")},
         {key: "H", action: "resume", hint: qsTr("Continue capture · Keeps annotations")}
     ] : [
-        {key: "H", action: "scroll", hint: qsTr("Scrolling capture")}
+        {key: "H", action: "scroll", hint: qsTr("Scrolling capture")},
+        {key: "O", action: "ocr", hint: qsTr("OCR · Recognize text")}
     ]).concat([
         {key: "Z", action: "undo", hint: qsTr("Undo")},
         {key: "X", action: "redo", hint: qsTr("Redo")},
@@ -201,6 +202,11 @@ Item {
         else if (root.longImage && captureController.selected &&
                  event.key === Qt.Key_Minus && event.modifiers === Qt.NoModifier)
             root.zoomRequested(0.8)
+        else if (!root.longImage && captureController.selected &&
+                 event.key === Qt.Key_O && event.modifiers === Qt.NoModifier) {
+            root.commitRequested()
+            captureController.startOcr()
+        }
         else if (captureController.selected && captureController.tool === "select" &&
                  (event.key === Qt.Key_Up || event.key === Qt.Key_Down ||
                   event.key === Qt.Key_Left || event.key === Qt.Key_Right) &&
@@ -355,7 +361,8 @@ Item {
                         }
                         ToolbarGlyph {
                             objectName: root.longImage ? "longGlyph_" + modelData.action :
-                                        modelData.action === "select" ? "selectCursorGlyph" : ""
+                                        modelData.action === "select" ? "selectCursorGlyph" :
+                                        "toolGlyph_" + modelData.action
                             action: root.displayedTool(modelData.action)
                             accentColor: captureController.annotationColor
                             darkMode: root.darkToolbar
@@ -383,6 +390,7 @@ Item {
                                 case "redo": captureController.redo(); break
                                 case "scroll": captureController.startScroll(); break
                                 case "resume": captureController.resumeScroll(); break
+                                case "ocr": captureController.startOcr(); break
                                 case "zoom_out": root.zoomRequested(0.8); break
                                 case "zoom_in": root.zoomRequested(1.25); break
                                 default: captureController.tool = modelData.action

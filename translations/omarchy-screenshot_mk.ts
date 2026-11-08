@@ -119,6 +119,10 @@
             <source>Pin screenshot</source>
             <translation>Закачи слика од екранот</translation>
         </message>
+        <message>
+            <source>OCR · Recognize text</source>
+            <translation>OCR · Препознај текст</translation>
+        </message>
     </context>
     <context>
         <name>CaptureController</name>
@@ -206,6 +210,14 @@
             <source>Cannot pin screenshot.</source>
             <translation>Сликата од екранот не може да се закачи.</translation>
         </message>
+        <message>
+            <source>OCR is not available.</source>
+            <translation>OCR не е достапно.</translation>
+        </message>
+        <message>
+            <source>No text found.</source>
+            <translation>Не е пронајден текст.</translation>
+        </message>
     </context>
     <context>
         <name>LongOverlay</name>
@@ -235,6 +247,22 @@
         <message>
             <source>The selection contains several windows · Esc to cancel</source>
             <translation>Изборот содржи повеќе прозорци · Esc за откажување</translation>
+        </message>
+        <message>
+            <source>Copy</source>
+            <translation>Копирај</translation>
+        </message>
+        <message>
+            <source>Copied</source>
+            <translation>Копирано</translation>
+        </message>
+        <message>
+            <source>Close OCR result</source>
+            <translation>Затвори OCR резултат</translation>
+        </message>
+        <message>
+            <source>Recognizing text…</source>
+            <translation>Се препознава текст…</translation>
         </message>
     </context>
     <context>
