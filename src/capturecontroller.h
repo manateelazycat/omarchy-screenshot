@@ -112,7 +112,8 @@ public:
   bool exporting() const { return m_exporting; }
   QImage renderedImage() const;
   void paintScrollPreview(QPainter &painter, const QRectF &source,
-                          const QRectF &target) const;
+                          const QRectF &target,
+                          bool includeCropFrame = true) const;
   static QPainterPath freehandPath(const QVariantList &points);
   static QPainterPath mosaicPath(const QVariantMap &item);
 
@@ -195,6 +196,10 @@ private:
   void setHovered(const QRectF &rect);
   void setStatus(const QString &message);
   void paintAnnotation(QPainter &painter, const QVariantMap &item) const;
+  // The last plain rectangle annotation crops the export; -1 when absent.
+  int cropFrameIndex() const;
+  // Selection shrunk to the crop frame, or the whole selection without one.
+  QRectF exportRegion() const;
   void appendAnnotation(const QVariantMap &item);
   void setScrollState(ScrollState state);
   void captureScrollFrame();
