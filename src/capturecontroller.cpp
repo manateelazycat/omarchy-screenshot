@@ -1404,7 +1404,8 @@ QPainterPath CaptureController::mosaicPath(const QVariantMap &item) {
 
 void CaptureController::paintScrollPreview(QPainter &painter,
                                            const QRectF &source,
-                                           const QRectF &target) const {
+                                           const QRectF &target,
+                                           bool includeCropFrame) const {
   if (m_scrollStitcher.image().isNull() || source.isEmpty() || target.isEmpty())
     return;
   painter.save();
@@ -1442,8 +1443,11 @@ void CaptureController::paintScrollPreview(QPainter &painter,
     painter.fillPath(outer.subtracted(holes), QColor(0, 0, 0, 150));
   }
   painter.setRenderHint(QPainter::Antialiasing);
-  for (const QVariant &annotation : m_annotations) {
-    const QVariantMap item = annotation.toMap();
+  const int frame = includeCropFrame ? -1 : cropFrameIndex();
+  for (int i = 0; i < m_annotations.size(); ++i) {
+    if (i == frame)
+      continue;
+    const QVariantMap item = m_annotations[i].toMap();
     const QString type = item.value(QStringLiteral("type")).toString();
     if (type != QStringLiteral("mosaic") &&
         type != QStringLiteral("spotlight"))
@@ -1455,11 +1459,34 @@ void CaptureController::paintScrollPreview(QPainter &painter,
   painter.restore();
 }
 
+int CaptureController::cropFrameIndex() const {
+  for (int i = m_annotations.size() - 1; i >= 0; --i)
+    if (m_annotations[i].toMap().value(QStringLiteral("type")) ==
+        QStringLiteral("rect"))
+      return i;
+  return -1;
+}
+
+QRectF CaptureController::exportRegion() const {
+  const int frame = cropFrameIndex();
+  if (frame < 0)
+    return m_selection;
+  const QVariantMap item = m_annotations[frame].toMap();
+  return m_selection.intersected(
+      QRectF(fromMap(item.value(QStringLiteral("start"))),
+             fromMap(item.value(QStringLiteral("end"))))
+          .normalized());
+}
+
 QImage CaptureController::renderedImage() const {
   if (!m_selected || m_selection.isEmpty())
     return {};
+  const QRectF region = exportRegion();
+  if (region.isEmpty())
+    return {};
+  const int frame = cropFrameIndex();
   if (m_scrollState == ScrollState::Reviewing) {
-    const QRect source = m_selection.toAlignedRect().intersected(
+    const QRect source = region.toAlignedRect().intersected(
         QRect(QPoint(0, 0), m_scrollStitcher.image().size()));
     if (source.isEmpty())
       return {};
@@ -1468,14 +1495,15 @@ QImage CaptureController::renderedImage() const {
       return {};
     result.fill(Qt::transparent);
     QPainter painter(&result);
-    paintScrollPreview(painter, source, QRectF(QPointF(0, 0), source.size()));
+    paintScrollPreview(painter, source, QRectF(QPointF(0, 0), source.size()),
+                       false);
     return result;
   }
   qreal scale = 1;
   for (const auto &monitor : m_monitors)
     scale = std::max(scale, monitor.image.width() / monitor.geometry.width());
-  const QSize size(qMax(1, qRound(m_selection.width() * scale)),
-                   qMax(1, qRound(m_selection.height() * scale)));
+  const QSize size(qMax(1, qRound(region.width() * scale)),
+                   qMax(1, qRound(region.height() * scale)));
   QImage result(size, QImage::Format_ARGB32_Premultiplied);
   if (result.isNull())
     return {};
@@ -1484,7 +1512,7 @@ QImage CaptureController::renderedImage() const {
     QPainter painter(&result);
     painter.setRenderHint(QPainter::SmoothPixmapTransform);
     for (const auto &monitor : m_monitors) {
-      const QRectF shared = m_selection.intersected(monitor.geometry);
+      const QRectF shared = region.intersected(monitor.geometry);
       if (shared.isEmpty())
         continue;
       const QRectF source(
@@ -1494,8 +1522,8 @@ QImage CaptureController::renderedImage() const {
               monitor.geometry.height(),
           shared.width() * monitor.image.width() / monitor.geometry.width(),
           shared.height() * monitor.image.height() / monitor.geometry.height());
-      const QRectF target((shared.x() - m_selection.x()) * scale,
-                          (shared.y() - m_selection.y()) * scale,
+      const QRectF target((shared.x() - region.x()) * scale,
+                          (shared.y() - region.y()) * scale,
                           shared.width() * scale, shared.height() * scale);
       painter.drawImage(target, monitor.image, source);
     }
@@ -1511,8 +1539,8 @@ QImage CaptureController::renderedImage() const {
     QPainter painter(&result);
     painter.setRenderHint(QPainter::SmoothPixmapTransform, false);
     painter.scale(scale, scale);
-    painter.translate(-m_selection.topLeft());
-    painter.setClipRect(m_selection);
+    painter.translate(-region.topLeft());
+    painter.setClipRect(region);
     painter.setClipPath(shape, Qt::IntersectClip);
     for (const auto &monitor : m_monitors) {
       if (!shape.boundingRect().intersects(monitor.geometry))
@@ -1524,13 +1552,15 @@ QImage CaptureController::renderedImage() const {
   if (!holes.isEmpty()) {
     QPainter painter(&result);
     painter.scale(scale, scale);
-    painter.translate(-m_selection.topLeft());
+    painter.translate(-region.topLeft());
     QPainterPath outer;
-    outer.addRect(m_selection);
+    outer.addRect(region);
     painter.fillPath(outer.subtracted(holes), QColor(0, 0, 0, 150));
   }
-  for (const QVariant &annotation : m_annotations) {
-    const auto item = annotation.toMap();
+  for (int i = 0; i < m_annotations.size(); ++i) {
+    if (i == frame)
+      continue;
+    const auto item = m_annotations[i].toMap();
     if (item.value(QStringLiteral("type")).toString() ==
             QStringLiteral("mosaic") ||
         item.value(QStringLiteral("type")).toString() ==
@@ -1539,7 +1569,7 @@ QImage CaptureController::renderedImage() const {
     QPainter painter(&result);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.scale(scale, scale);
-    painter.translate(-m_selection.topLeft());
+    painter.translate(-region.topLeft());
     paintAnnotation(painter, item);
   }
   return result;
@@ -1615,7 +1645,7 @@ void CaptureController::pin() {
     return;
   const QImage image = renderedImage();
   if (!image.isNull())
-    emit pinRequested(image, m_selection);
+    emit pinRequested(image, exportRegion());
 }
 
 void CaptureController::finishPin(bool success) {

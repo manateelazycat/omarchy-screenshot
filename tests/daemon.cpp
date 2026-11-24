@@ -45,6 +45,52 @@ static int takeWithin(int listener, int expected) {
   return taken;
 }
 
+// Fakes hyprctl and grim so a CaptureController captures without a compositor.
+static bool installFakeCapture(const QTemporaryDir &temp) {
+  QSettings::setDefaultFormat(QSettings::IniFormat);
+  QSettings::setPath(QSettings::IniFormat, QSettings::UserScope, temp.path());
+  auto write = [&](const QString &name, const QByteArray &data,
+                   bool executable = false) {
+    QFile file(temp.filePath(name));
+    if (!file.open(QIODevice::WriteOnly) || file.write(data) != data.size())
+      return false;
+    file.close();
+    return !executable || file.setPermissions(QFile::ReadOwner | QFile::WriteOwner |
+                                              QFile::ExeOwner);
+  };
+  const QJsonObject monitor{{"name", QGuiApplication::primaryScreen()->name()},
+                            {"width", 400}, {"height", 300}, {"scale", 1},
+                            {"x", 0}, {"y", 0}};
+  QImage screen(400, 300, QImage::Format_RGB32);
+  screen.fill(Qt::darkGreen);
+  if (!write(QStringLiteral("monitors.json"),
+             QJsonDocument(QJsonArray{monitor}).toJson()) ||
+      !screen.save(temp.filePath(QStringLiteral("screen.png"))) ||
+      !write(QStringLiteral("hyprctl"),
+             "#!/bin/sh\n"
+             "if [ \"$2\" = monitors ]; then /usr/bin/cat \"$DAEMON_TEST_DIR/monitors.json\"; "
+             "elif [ \"$2\" = getoption ]; then printf '{\"bool\":false}'; "
+             "elif [ \"$1\" = eval ]; then "
+             "case \"$2\" in *true*) printf hidden > \"$DAEMON_TEST_DIR/cursor\";; "
+             "*) printf visible > \"$DAEMON_TEST_DIR/cursor\";; esac; printf ok; "
+             "else printf '[]'; fi\n",
+             true) ||
+      !write(QStringLiteral("grim"),
+             "#!/bin/sh\n"
+             "[ \"$(/usr/bin/cat \"$DAEMON_TEST_DIR/cursor\")\" = hidden ] || exit 1\n"
+             "/usr/bin/cat \"$DAEMON_TEST_DIR/screen.png\"\n",
+             true))
+    return false;
+  qputenv("DAEMON_TEST_DIR", QFile::encodeName(temp.path()));
+  qputenv("XDG_RUNTIME_DIR", QFile::encodeName(temp.path()));
+  qputenv("PATH", QFile::encodeName(temp.path()));
+  qputenv("XDG_SESSION_TYPE", "wayland");
+  qputenv("HYPRLAND_INSTANCE_SIGNATURE", "test");
+  // Keep the in-process capture away from any real compositor.
+  qunsetenv("WAYLAND_DISPLAY");
+  return true;
+}
+
 class DaemonTest : public QObject {
   Q_OBJECT
 private slots:
@@ -246,44 +292,8 @@ private slots:
   void resetPreparesTheNextCapture() {
     QTemporaryDir temp;
     QVERIFY(temp.isValid());
-    QSettings::setDefaultFormat(QSettings::IniFormat);
-    QSettings::setPath(QSettings::IniFormat, QSettings::UserScope, temp.path());
-    auto write = [&](const QString &name, const QByteArray &data, bool executable = false) {
-      QFile file(temp.filePath(name));
-      if (!file.open(QIODevice::WriteOnly) || file.write(data) != data.size())
-        return false;
-      file.close();
-      return !executable || file.setPermissions(QFile::ReadOwner | QFile::WriteOwner |
-                                                QFile::ExeOwner);
-    };
-    const QJsonObject monitor{{"name", QGuiApplication::primaryScreen()->name()},
-                              {"width", 400}, {"height", 300}, {"scale", 1},
-                              {"x", 0}, {"y", 0}};
-    QVERIFY(write(QStringLiteral("monitors.json"),
-                  QJsonDocument(QJsonArray{monitor}).toJson()));
-    QImage screen(400, 300, QImage::Format_RGB32);
-    screen.fill(Qt::darkGreen);
-    QVERIFY(screen.save(temp.filePath(QStringLiteral("screen.png"))));
-    QVERIFY(write(QStringLiteral("hyprctl"),
-                  "#!/bin/sh\n"
-                  "if [ \"$2\" = monitors ]; then /usr/bin/cat \"$DAEMON_TEST_DIR/monitors.json\"; "
-                  "elif [ \"$2\" = getoption ]; then printf '{\"bool\":false}'; "
-                  "elif [ \"$1\" = eval ]; then "
-                  "case \"$2\" in *true*) printf hidden > \"$DAEMON_TEST_DIR/cursor\";; "
-                  "*) printf visible > \"$DAEMON_TEST_DIR/cursor\";; esac; printf ok; "
-                  "else printf '[]'; fi\n", true));
-    QVERIFY(write(QStringLiteral("grim"),
-                  "#!/bin/sh\n"
-                  "[ \"$(/usr/bin/cat \"$DAEMON_TEST_DIR/cursor\")\" = hidden ] || exit 1\n"
-                  "/usr/bin/cat \"$DAEMON_TEST_DIR/screen.png\"\n", true));
-    qputenv("DAEMON_TEST_DIR", QFile::encodeName(temp.path()));
-    qputenv("XDG_RUNTIME_DIR", QFile::encodeName(temp.path()));
     const QByteArray path = qgetenv("PATH");
-    qputenv("PATH", QFile::encodeName(temp.path()));
-    qputenv("XDG_SESSION_TYPE", "wayland");
-    qputenv("HYPRLAND_INSTANCE_SIGNATURE", "test");
-    // Keep the in-process capture away from any real compositor.
-    qunsetenv("WAYLAND_DISPLAY");
+    QVERIFY(installFakeCapture(temp));
 
     CaptureController controller;
     QString error;
@@ -336,6 +346,59 @@ private slots:
     QVERIFY(controller.imagesReady());
     QCOMPARE(controller.monitors().size(), 1);
     QVERIFY(controller.captureGeneration() > firstGeneration);
+    qputenv("PATH", path);
+  }
+
+  // The last plain rectangle marks what gets exported: the crop drops the
+  // frame itself while keeping the annotations inside it.
+  void rectFrameCropsExport() {
+    QTemporaryDir temp;
+    QVERIFY(temp.isValid());
+    const QByteArray path = qgetenv("PATH");
+    QVERIFY(installFakeCapture(temp));
+
+    CaptureController controller;
+    QString error;
+    QVERIFY2(controller.initialize(&error), qPrintable(error));
+    controller.pointerPress(0, 10, 10);
+    controller.pointerMove(0, 120, 90);
+    controller.pointerRelease(0, 120, 90);
+    QVERIFY(controller.selected());
+    controller.setTool(QStringLiteral("fillrect"));
+    controller.pointerPress(0, 30, 30);
+    controller.pointerMove(0, 50, 50);
+    controller.pointerRelease(0, 50, 50);
+    controller.setTool(QStringLiteral("rect"));
+    controller.pointerPress(0, 20, 20);
+    controller.pointerMove(0, 60, 60);
+    controller.pointerRelease(0, 60, 60);
+    QCOMPARE(controller.annotations().size(), 2);
+
+    const QImage cropped = controller.renderedImage();
+    QCOMPARE(cropped.size(), QSize(40, 40));
+    // The frame stroke is not painted, the mark inside still is.
+    QCOMPARE(cropped.pixelColor(0, 0), QColor(Qt::darkGreen));
+    QCOMPARE(cropped.pixelColor(39, 39), QColor(Qt::darkGreen));
+    QCOMPARE(cropped.pixelColor(15, 15), QColor(QStringLiteral("#ff4b55")));
+    QCOMPARE(cropped.pixelColor(35, 35), QColor(Qt::darkGreen));
+
+    QSignalSpy pinRequested(&controller, &CaptureController::pinRequested);
+    controller.pin();
+    QCOMPARE(pinRequested.count(), 1);
+    QCOMPARE(pinRequested.first()[0].value<QImage>(), cropped);
+    QCOMPARE(pinRequested.first()[1].toRectF(), QRectF(20, 20, 40, 40));
+
+    // A newer frame wins and the older rectangle stays an ordinary mark.
+    controller.pointerPress(0, 25, 25);
+    controller.pointerMove(0, 80, 70);
+    controller.pointerRelease(0, 80, 70);
+    QCOMPARE(controller.annotations().size(), 3);
+    QCOMPARE(controller.renderedImage().size(), QSize(55, 45));
+
+    controller.undo();
+    QCOMPARE(controller.renderedImage().size(), QSize(40, 40));
+    controller.undo();
+    QCOMPARE(controller.renderedImage().size(), QSize(110, 80));
     qputenv("PATH", path);
   }
 };
